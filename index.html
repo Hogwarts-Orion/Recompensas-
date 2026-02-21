@@ -23,29 +23,22 @@
         h1 { font-family: 'Cinzel'; color: var(--gold); text-align: center; margin: 10px 0; letter-spacing: 4px; font-weight: 900; }
         .subtitle { text-align: center; font-size: 9px; color: var(--gold-dark); margin-bottom: 20px; letter-spacing: 2px; }
 
-        /* VISTA DE BÓVEDA */
-        .vault-card { background: linear-gradient(135deg, #000 0%, #1a1a1c 100%); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; text-align: center; position: relative; overflow: hidden; }
-        .vault-card::after { content: "GRINGOTTS"; position: absolute; bottom: -10px; right: -10px; font-family: 'Cinzel'; font-size: 40px; color: rgba(212, 175, 55, 0.03); transform: rotate(-15deg); }
-        
-        .user-name { font-size: 20px; color: #fff; font-family: 'Cinzel'; margin-bottom: 5px; }
-        .balance-box { font-size: 34px; color: var(--gold); font-weight: bold; text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .vault-card { background: linear-gradient(135deg, #000 0%, #1a1a1c 100%); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; text-align: center; position: relative; }
+        .user-name { font-size: 18px; color: #fff; font-family: 'Cinzel'; margin-bottom: 5px; }
+        .balance-box { font-size: 32px; color: var(--gold); font-weight: bold; }
 
-        /* NAVEGACIÓN */
         .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
-        .tab-btn { background: #111; border: 1px solid #444; color: #777; padding: 12px 2px; font-family: 'Cinzel'; font-size: 9px; cursor: pointer; border-radius: 4px; transition: 0.3s; }
-        .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1); }
+        .tab-btn { background: #111; border: 1px solid #444; color: #777; padding: 10px 2px; font-family: 'Cinzel'; font-size: 9px; cursor: pointer; border-radius: 4px; }
+        .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        /* LISTADOS */
-        .list-area { max-height: 400px; overflow-y: auto; padding-right: 5px; scrollbar-width: thin; }
-        .item-card { background: rgba(255,255,255,0.03); border: 1px solid #222; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .item-info b { display: block; color: var(--gold); font-size: 13px; font-family: 'Cinzel'; }
-        .item-info span { font-size: 10px; color: #999; }
-        .qty-badge { background: var(--gold); color: #000; padding: 3px 10px; border-radius: 5px; font-weight: bold; font-size: 12px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .list-area { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .item-card { background: rgba(255,255,255,0.03); border: 1px solid #222; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info b { display: block; color: var(--gold); font-size: 12px; font-family: 'Cinzel'; }
+        .item-info span { font-size: 9px; color: #999; }
+        .qty-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
 
-        input { width: 100%; padding: 14px; background: #000; border: 1px solid #333; color: var(--gold); border-radius: 8px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel'; font-size: 14px; }
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--gold); border-radius: 8px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel'; }
         .btn-gold { background: var(--gold); color: #000; border: none; padding: 12px; width: 100%; font-family: 'Cinzel'; font-weight: bold; cursor: pointer; border-radius: 6px; }
-        
-        .cat-title { color: var(--gold-dark); font-size: 11px; margin: 15px 0 10px; border-bottom: 1px solid #222; padding-bottom: 5px; display: block; letter-spacing: 2px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -53,161 +46,148 @@
 
     <div class="main-app">
         <h1>GRINGOTTS</h1>
-        <div class="subtitle">Official Banking System - Hogwarts Orión</div>
+        <div class="subtitle">Banco de Magos - Hogwarts Orión</div>
 
         <div id="login-zone">
-            <input type="text" id="user-search" placeholder="Nombre del Mago / Bruja">
+            <input type="text" id="user-search" placeholder="Nombre de Mago/Bruja">
             <button class="btn-gold" onclick="login()">ABRIR MI BÓVEDA</button>
-            <p style="font-size: 10px; color: #555; text-align: center; margin-top: 15px; line-height: 1.5;">Ingresa tu nombre exactamente como figura en el pergamino de Gringotts.</p>
+            <p style="font-size: 9px; color: #444; text-align: center; margin-top: 10px;">Ingresa tu nombre de WhatsApp (sin emojis si es posible).</p>
         </div>
 
         <div id="app-zone" class="hidden">
             <div class="vault-card">
+                <div id="user-house" style="font-size: 10px; color: var(--gold-dark); margin-bottom: 5px;">CASA MAGICA</div>
                 <div class="user-name" id="user-display">MAGO</div>
-                <div class="balance-box"><span id="user-gold">0</span> <span style="font-size:14px">G</span></div>
+                <div class="balance-box"><span id="user-gold">0</span> G</div>
             </div>
 
             <div class="nav-grid">
-                <button class="tab-btn active" onclick="showTab('tienda')">TIENDA</button>
-                <button class="tab-btn" onclick="showTab('baul')">BAÚL</button>
-                <button class="tab-btn" onclick="showTab('rank')">TOP</button>
-                <button class="tab-btn" onclick="showTab('adm')">⚙️</button>
+                <button class="tab-btn active" onclick="showTab('baul')">BAÚL</button>
+                <button class="tab-btn" onclick="showTab('tienda')">TIENDA</button>
+                <button class="tab-btn" onclick="showTab('rank')">RANKING</button>
+                <button class="tab-btn" onclick="showTab('spells')">HECHIZOS</button>
             </div>
 
-            <div id="tab-tienda" class="tab-content">
-                <div class="list-area" id="store-list"></div>
-            </div>
-
-            <div id="tab-baul" class="tab-content hidden">
+            <div id="tab-baul" class="tab-content">
                 <div class="list-area" id="baul-list"></div>
+            </div>
+
+            <div id="tab-tienda" class="tab-content hidden">
+                <div class="list-area" id="store-list"></div>
             </div>
 
             <div id="tab-rank" class="tab-content hidden">
                 <div class="list-area" id="rank-list"></div>
             </div>
 
-            <div id="tab-adm" class="tab-content hidden">
-                <input type="password" id="adm-key" placeholder="Palabra Maestra">
-                <input type="text" id="adm-target" placeholder="Nombre Destinatario">
-                <input type="number" id="adm-val" placeholder="Cantidad Galeones (+/-)">
-                <button class="btn-gold" style="background:#fff" onclick="adminMod()">MODIFICAR BÓVEDA</button>
+            <div id="tab-spells" class="tab-content hidden">
+                <div class="list-area" style="font-size: 11px;" id="spell-list"></div>
             </div>
 
-            <p onclick="location.reload()" style="text-align:center; font-size:10px; color:#444; cursor:pointer; margin-top:20px; font-family:'Cinzel'">Cerrar Sesión</p>
+            <p onclick="location.reload()" style="text-align:center; font-size:10px; color:#444; cursor:pointer; margin-top:15px">Cerrar Sesión</p>
         </div>
     </div>
 
 <script>
-    const DB_URL = "https://hogwarts-orion-default-rtdb.firebaseio.com/gringotts";
-    let sesion = null;
-
-    // --- BASE DE DATOS MAESTRA DE USUARIOS (EXTRACTO COMPLETO) ---
-    const DATA_GRINGOTTS = {
-        "VALEN M.": 1850248, "MONTSE CALDERÓN": 28400, "ARMY": 30900, "CHINNI": 3000, "FRAN OLIVARES": 2503532, 
-        "ESTELA MALFOY": 1931900, "BREN": 105500, "LULU": 552290, "YOPI DE ARÁNDANO": 1800, "MARTINA": 5642800,
+    // --- DATOS COMPLETOS INYECTADOS ---
+    const GALEONES = {
+        "VALEN M": 1850248, "MONTSE CALDERON": 28400, "ARMY": 30900, "CHINNI": 3000, "FRAN OLIVARES": 2503532,
+        "ESTELA MALFOY": 1931900, "BREN": 105500, "LULU": 552290, "YOPI DE ARANDANO": 1800, "MARTINA": 5642800,
         "LUISURREA": 12443039, "VICTOR SMIRNOV": 418570, "ALII": 121543237, "BETSI": 82831328, "VAL": 120200,
-        "CAM": 459450, "GRETEL": 1424660, "ANTONIOMANUEL": 649090, "BUNNY": 15530222, "BELU": 30373514,
-        "NANCY": 18239795, "AIX NAJLE": 9314350, "SOFIA": 8768712, "LAURA MAGGI": 6294404, "NINA": 8403542,
-        "WENDY": 6741978, "ANGE": 33253387, "MAR": 3941970, "MALENA NOTT": 444665, "GABO": 3681553,
-        "LESLIE": 3958666, "ANDRA": 8269726, "DARI": 13576740, "MELINA SLY": 25504328, "JERE": 67137180, "NICK": 2218114
+        "CAM": 459450, "SHADOW THE HEDGEHOG": 448350, "VANIA": 1221782, "JAVI": 359240, "BELU": 30373514,
+        "AUDE": 132990, "LISETTE": 5002980, "POLLITO PIO": 762160, "ANITAPAU": 729390, "LILY": 54432,
+        "LU": 12424425, "JUAN J": 1245440, "FIOO FRANCO": 176160, "DANIEL": 714300, "GRETEL": 1424660,
+        "ANTONIOMANUEL": 649090, "BUNNY": 15530222, "NANCY": 18239795, "AIX NAJLE": 9314350, "SOFIA": 8768712,
+        "NICK": 2218114, "NINA": 8403542, "WENDY": 6741978, "ASTERI NOX": 485220, "ANGE": 33253387,
+        "MILCHHHHH": 915006, "ANGELICA": 2712535, "KEIRON": 852100, "MAR": 3941970, "ELISEO CHAVEZ": 28060,
+        "MALENA NOTT": 444665, "GABO": 3681553, "LESLIE": 3958666, "URIEL": 1783698, "ANDRA": 8269726,
+        "DARI": 13576740, "MELINA SLY": 25504328, "JESSI": 3743284, "FERNANDO SLY": 5972030, "MILAGROS MALFOY": 666680
     };
 
-    // --- BASE DE DATOS DE INVENTARIOS ---
-    const INV_INICIAL = {
-        "FERNANDO SLY": {"🩵🍫":65, "🖤🍫":27, "💡":25, "💛🍫":17, "💀🪄":34, "💊":25, "💘🧪":19, "🍭":8, "🔮":18, "🫘":51},
-        "BELU": {"🩷🍫":5, "💀🪄":6, "🧡🍫":36, "💜🍫":21, "💌":1, "💚🍫":2, "🧪💘":1, "🔥🧹":1},
-        "CRIS DELACOUR": {"💀🪄":17, "🧡🍫":18, "💜🍫":35, "💌":36, "🩵🍫":96, "💊":25, "💍":33, "🪞":96, "🎱":93, "🧪💘":24},
-        "WENDY": {"💀🪄":22, "🧡🍫":7, "💜🍫":8, "💌":13, "🩵🍫":22, "🪞":10, "🎱":10, "🧪💘":5},
-        "ALII": {"🩷🍫":91, "💀🪄":90, "🧡🍫":26, "💜🍫":30, "💌":36, "🩵🍫":87, "💍":36, "💡":36, "🫘":52},
-        "MELINA SLY": {"💚🍫":30, "❤️🍫":28, "🖤🍫":28, "💛🍫":32, "🩵🍫":55, "💌":31, "💍":27, "🫘":169},
-        "LUISURREA": {"💚🍫":31, "❤️🍫":27, "🪄💀":37, "🫘":168, "🩷🍫":36, "🗝️🪽":8, "💊":16},
-        "NICK": {"🧡🍫":22, "🩵🍫":27, "🖤🍫":23, "🔮":21, "💘🧪":13, "💍":16, "🪶":12, "🗝️🪽":10},
-        "ANDRA": {"🔮":13, "🧡🍫":9, "🩵🍫":22, "🪶":11, "💜🍫":15, "🫘":16},
-        "ANGEL ROSIER": {"🫘":24, "🔮":20, "🪞":34, "🎱":34, "🪶":25, "🪄💀":40, "💍":28}
+    const INV_MASTER = {
+        "FERNANDO SLY": {"🩵🍫":65,"🖤🍫":27,"💡":25,"💛🍫":17,"💀🪄":34,"💊":25,"💘🧪":19,"🔮":18,"🫘":51},
+        "BELU": {"🧡🍫":36,"💜🍫":21,"💚🍫":2,"🪄💀":6,"🔥🧹":1},
+        "CRIS DELACOUR": {"🩵🍫":96,"🪞":96,"🎱":93,"🧪💘":24,"🗝️🪽":20,"🍭":10},
+        "ALII": {"🩷🍫":91,"💀🪄":90,"🩵🍫":87,"💍":36,"💡":36,"🫘":52,"🗝️🪽":20},
+        "MELINA SLY": {"💚🍫":30,"❤️🍫":28,"💛🍫":32,"🩵🍫":55,"🫘":169,"💍":27},
+        "LUISURREA": {"🫘":168,"🪄💀":37,"🩷🍫":36,"🩵🍫":25,"💚🍫":31},
+        "NANCY": {"🪄💀":101,"🩵🍫":61,"🧡🍫":49,"🩷🍫":51,"🔮":42,"🫘":49,"🍭⚡":20},
+        "NICK": {"🧡🍫":22,"🩵🍫":27,"🖤🍫":23,"🔮":21,"💘🧪":13,"💍":16}
     };
 
-    // --- PRODUCTOS DE LA TIENDA ---
-    const STORE_ITEMS = [
-        {c: "CALDERO CHORREANTE", i: [
-            {n:"Saeta de Fuego 🔥🧹", p:3800, e:"🔥🧹"}, {n:"Nimbus 2000 🪽🧹", p:2500, e:"🪽🧹"},
-            {n:"Varita de Sauco 🪄💀", p:3800, e:"🪄💀"}, {n:"El giratiempo ⏱️", p:4400, e:"⏱️"},
-            {n:"Felix felicis 🧪🍀", p:4400, e:"🧪🍀"}, {n:"Amortentia 🧪💘", p:8800, e:"🧪💘"}
-        ]},
-        {c: "RANAS DE CHOCOLATE", i: [
-            {n:"Ranita Amarilla 💛🍫", p:1000, e:"💛🍫"}, {n:"Ranita Verde 💚🍫", p:5000, e:"💚🍫"},
-            {n:"Ranita Celeste 🩵🍫", p:450, e:"🩵🍫"}, {n:"Ranita Rosa 🩷🍫", p:1000, e:"🩷🍫"}
-        ]}
+    const STORE = [
+        {n:"Saeta de Fuego 🔥🧹", p:3800, d:"x2 Puntos Quidditch"},
+        {n:"Varita de Sauco 🪄💀", p:3800, d:"x2 Puntos Duelos"},
+        {n:"Giratiempo ⏱️", p:4400, d:"Entrega retos tarde"},
+        {n:"Felix Felicis 🧪🍀", p:4400, d:"Participación ausente"},
+        {n:"Amortentia 🧪💘", p:8800, d:"Enamora a un rival"},
+        {n:"Caja de Grageas 🫙🫘", p:50000, d:"12 grageas sorpresa"},
+        {n:"Ranita Celeste 🩵🍫", p:450, d:"x2 G en Minijuegos"}
     ];
 
-    async function login() {
-        const input = document.getElementById('user-search').value.toUpperCase();
-        const name = input.replace(/[@~⁨⁩|*]/g, "").trim();
-        if(!name) return;
+    const SPELLS = {
+        "Ataque": ["Expelliarmus", "Incendio", "Depulso", "Furnunculus", "Desmaius", "Penetro"],
+        "Stealth": ["Rictusempra", "Flipendo", "Immobulus", "Diffindo", "Impedimenta"],
+        "Defensa": ["Petrificus Totalus", "Bombarda", "Incarcerous", "Confundus", "Meteolojinx"],
+        "Maldiciones": ["Avada Kedavra", "Crucio", "Imperio", "Confringo", "Sectumsempra"]
+    };
 
-        let r = await fetch(`${DB_URL}/${name}.json`);
-        let d = await r.json();
+    let sesion = null;
 
-        if(!d) {
-            d = { 
-                nombre: name, 
-                oro: DATA_GRINGOTTS[name] || 2000, 
-                inventario: INV_INICIAL[name] || {} 
-            };
-            await fetch(`${DB_URL}/${name}.json`, { method: 'PUT', body: JSON.stringify(d) });
-        }
-        sesion = d;
-        localStorage.setItem('wizard_name', name);
-        initVault();
-    }
+    function login() {
+        const raw = document.getElementById('user-search').value.toUpperCase();
+        const clean = raw.replace(/[^A-Z0-9 ]/g, "").trim();
+        
+        const oro = GALEONES[clean] || 0;
+        const inv = INV_MASTER[clean] || {};
 
-    function initVault() {
+        sesion = { nombre: clean, oro: oro, inventario: inv };
         document.getElementById('login-zone').classList.add('hidden');
         document.getElementById('app-zone').classList.remove('hidden');
-        document.getElementById('user-display').innerText = sesion.nombre;
-        document.getElementById('user-gold').innerText = sesion.oro.toLocaleString();
         
-        renderTienda();
+        document.getElementById('user-display').innerText = clean || "MAGO DESCONOCIDO";
+        document.getElementById('user-gold').innerText = oro.toLocaleString();
+        
         renderBaul();
+        renderTienda();
         renderRank();
-    }
-
-    function renderTienda() {
-        let h = "";
-        STORE_ITEMS.forEach(cat => {
-            h += `<span class="cat-title">${cat.c}</span>`;
-            cat.i.forEach(item => {
-                h += `<div class="item-card">
-                    <div class="item-info"><b>${item.n}</b><span>Precio: ${item.p}G</span></div>
-                    <button class="btn-gold" style="width:80px; font-size:10px" onclick="buy('${item.e}', ${item.p})">COMPRAR</button>
-                </div>`;
-            });
-        });
-        document.getElementById('store-list').innerHTML = h;
+        renderSpells();
     }
 
     function renderBaul() {
-        const inv = sesion.inventario || {};
-        const entries = Object.entries(inv);
-        document.getElementById('baul-list').innerHTML = entries.length ? 
-            entries.map(([e, q]) => `<div class="item-card"><div class="item-info"><b>${e} Objeto Mágico</b></div><div class="qty-badge">${q}</div></div>`).join('') :
-            "<p style='text-align:center; color:#444'>Bóveda vacía.</p>";
+        const cont = document.getElementById('baul-list');
+        const items = Object.entries(sesion.inventario);
+        cont.innerHTML = items.length ? items.map(([e, q]) => `
+            <div class="item-card">
+                <div class="item-info"><b>${e} Objeto Mágico</b><span>En posesión</span></div>
+                <div class="qty-badge">${q}</div>
+            </div>
+        `).join('') : "<p style='text-align:center;font-size:10px'>Bóveda vacía de objetos.</p>";
     }
 
-    async function buy(e, p) {
-        if(sesion.oro < p) return alert("Insuficientes Galeones en la Bóveda.");
-        sesion.oro -= p;
-        sesion.inventario[e] = (sesion.inventario[e] || 0) + 1;
-        await fetch(`${DB_URL}/${sesion.nombre}.json`, { method: 'PATCH', body: JSON.stringify(sesion) });
-        initVault();
-    }
-
-    async function renderRank() {
-        const r = await fetch(`${DB_URL}.json`);
-        const d = await r.json();
-        const top = Object.values(d).sort((a,b) => b.oro - a.oro).slice(0,10);
-        document.getElementById('rank-list').innerHTML = top.map((u, i) => `
-            <div class="item-card"><span><b>${i+1}.</b> ${u.nombre}</span><span style="color:var(--gold)">${u.oro.toLocaleString()}G</span></div>
+    function renderTienda() {
+        document.getElementById('store-list').innerHTML = STORE.map(i => `
+            <div class="item-card">
+                <div class="item-info"><b>${i.n}</b><span>${i.d}</span></div>
+                <button class="btn-gold" style="width:70px; font-size:9px" onclick="alert('Bóveda bloqueada por el duende')">${i.p}G</button>
+            </div>
         `).join('');
+    }
+
+    function renderRank() {
+        const top = Object.entries(GALEONES).sort((a,b) => b[1] - a[1]).slice(0,15);
+        document.getElementById('rank-list').innerHTML = top.map((u, i) => `
+            <div class="item-card"><span><b>${i+1}.</b> ${u[0]}</span><span style="color:var(--gold)">${u[1].toLocaleString()}G</span></div>
+        `).join('');
+    }
+
+    function renderSpells() {
+        let h = "";
+        for(let cat in SPELLS) {
+            h += `<div style="color:var(--gold); margin:10px 0; border-bottom:1px solid #333;">${cat}</div>`;
+            h += `<div style="display:flex; flex-wrap:wrap; gap:5px;">${SPELLS[cat].map(s => `<span style="background:#111; padding:3px 8px; border-radius:4px; border:1px solid #222;">${s}</span>`).join('')}</div>`;
+        }
+        document.getElementById('spell-list').innerHTML = h;
     }
 
     function showTab(t) {
@@ -215,23 +195,6 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('tab-'+t).classList.remove('hidden');
         event.currentTarget.classList.add('active');
-    }
-
-    async function adminMod() {
-        if(document.getElementById('adm-key').value !== "Orion2026") return alert("Clave Incorrecta");
-        const target = document.getElementById('adm-target').value.toUpperCase();
-        const val = parseInt(document.getElementById('adm-val').value);
-        const r = await fetch(`${DB_URL}/${target}.json`);
-        const d = await r.json();
-        if(d) {
-            await fetch(`${DB_URL}/${target}.json`, { method: 'PATCH', body: JSON.stringify({oro: (d.oro || 0) + val}) });
-            alert("Bóveda Modificada.");
-        }
-    }
-
-    window.onload = () => {
-        const s = localStorage.getItem('wizard_name');
-        if(s) { document.getElementById('user-search').value = s; login(); }
     }
 </script>
 </body>
