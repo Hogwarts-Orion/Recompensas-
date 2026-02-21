@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hogwarts Orión - Sistema Real</title>
+    <title>Hogwarts Orión - Sistema de Gestión Real</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Special+Elite&display=swap');
 
         :root {
             --gold: #d4af37; --gold-dark: #8b6d45;
             --dark: #0a0a0b; --dark-blue: #161b22;
+            --red: #8b0000;
         }
 
         body {
@@ -18,104 +19,115 @@
             display: flex; flex-direction: column; align-items: center; padding: 20px;
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
         .main-container {
-            width: 100%; max-width: 450px; background: var(--dark-blue);
+            width: 100%; max-width: 480px; background: var(--dark-blue);
             border: 2px solid var(--gold); border-radius: 15px;
             padding: 20px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
             box-sizing: border-box; position: relative;
         }
 
-        h1, h2 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; margin: 10px 0; }
-        .tab-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px; flex: 1; cursor: pointer; font-family: 'Cinzel'; font-size: 10px; transition: 0.3s; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; margin: 10px 0; }
+        
+        /* --- TABS --- */
+        .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 5px; flex: 1; cursor: pointer; font-family: 'Cinzel'; font-size: 9px; transition: 0.3s; min-width: 80px; }
         .tab-btn.active { background: var(--gold); color: black; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
 
-        /* --- ESTADÍSTICAS --- */
-        .stats-banner { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); margin-bottom: 20px; }
-        .gold-count { font-size: 24px; color: var(--gold); font-weight: bold; }
+        /* --- DASHBOARD --- */
+        .stats-banner { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); margin-bottom: 15px; }
+        .gold-count { font-size: 26px; color: var(--gold); font-weight: bold; }
 
-        /* --- TIENDA Y RANKING --- */
-        .item-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(212,175,55,0.1); }
-        .rank-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(212,175,55,0.1); }
-        .rank-pos { color: var(--gold); font-weight: bold; margin-right: 10px; }
+        /* --- LISTAS E ITEMS --- */
+        .scroll-area { max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .item-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(212,175,55,0.1); }
+        .inventory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .inv-slot { background: #000; border: 1px solid var(--gold-dark); padding: 10px; text-align: center; border-radius: 5px; font-size: 20px; position: relative; }
+        .inv-name { font-size: 8px; display: block; color: #ccc; margin-top: 5px; }
 
-        /* --- BOTONES --- */
-        .btn-action { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px; width: 100%; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; border-radius: 5px; }
+        /* --- ADMIN PANEL --- */
+        .admin-box { background: var(--red); padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid var(--gold); }
+        .admin-box input { background: white !important; color: black !important; }
+
+        /* --- UI ELEMENTS --- */
+        .btn-action { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px; width: 100%; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; border-radius: 5px; margin-top: 10px; }
         .btn-action:hover:not(:disabled) { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
-        .btn-action:disabled { color: #444; border-color: #444; }
-
-        /* --- EFECTO MONEDAS --- */
-        .coin { position: fixed; width: 20px; height: 20px; background: #ffd700; border-radius: 50%; pointer-events: none; z-index: 999; border: 1px solid #b8860b; box-shadow: 0 0 5px gold; }
-
-        /* --- LOGIN --- */
-        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--gold); margin-bottom: 10px; border-radius: 5px; box-sizing: border-box; text-align: center; }
-
+        input { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: var(--gold); margin-bottom: 8px; border-radius: 5px; box-sizing: border-box; text-align: center; font-family: 'Special Elite'; }
+        
+        .coin { position: fixed; width: 15px; height: 15px; background: gold; border-radius: 50%; pointer-events: none; z-index: 999; box-shadow: 0 0 5px orange; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <h1>BÓVEDA REAL</h1>
+        <h1 id="main-title">BÓVEDA DE GRINGOTTS</h1>
         
         <div id="login-zone">
-            <input type="text" id="username" placeholder="Tu nombre de mago/bruja">
-            <button class="btn-action" onclick="login()">ACCEDER</button>
+            <input type="text" id="username" placeholder="Nombre de Mago / Bruja">
+            <button class="btn-action" onclick="login()">ABRIR BÓVEDA</button>
         </div>
 
         <div id="app-zone" class="hidden">
             <div class="stats-banner">
-                <div style="font-size: 10px; color: #888;">MAGO: <span id="user-name" style="color:white"></span></div>
+                <div style="font-size: 10px; color: #888;">IDENTIDAD: <span id="user-name" style="color:white"></span></div>
                 <div class="gold-count"><span id="user-gold">0</span> 🪙</div>
             </div>
 
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('mision')">MISIÓN</button>
                 <button class="tab-btn" onclick="showTab('tienda')">TIENDA</button>
+                <button class="tab-btn" onclick="showTab('baul')">BAÚL</button>
                 <button class="tab-btn" onclick="showTab('ranking')">RANKING</button>
+                <button class="tab-btn" style="border-color:var(--red)" onclick="showTab('admin')">ADMIN</button>
             </div>
 
             <div id="tab-mision" class="tab-content">
-                <div style="text-align:center; padding: 20px;">
-                    <p id="mision-text" style="font-style: italic; min-height: 50px;"></p>
-                    <button id="btn-claim" class="btn-action" onclick="reclamar()">RECLAMAR 500G</button>
-                    <p id="cd-msg" style="font-size: 11px; color: #888; margin-top: 10px;"></p>
-                </div>
+                <p id="mision-text" style="text-align:center; font-style:italic; padding:15px;"></p>
+                <button id="btn-claim" class="btn-action" onclick="reclamar()">RECLAMAR 500G ✨</button>
+                <p id="cd-msg" style="text-align:center; font-size:10px; color:#666"></p>
             </div>
 
             <div id="tab-tienda" class="tab-content hidden">
-                <div id="tienda-items">
-                    </div>
+                <div class="scroll-area" id="tienda-items"></div>
+            </div>
+
+            <div id="tab-baul" class="tab-content hidden">
+                <h3>TU INVENTARIO</h3>
+                <div class="inventory-grid" id="baul-grid"></div>
             </div>
 
             <div id="tab-ranking" class="tab-content hidden">
-                <div id="ranking-list">
-                    <p style="text-align:center">Consultando pergaminos...</p>
+                <h3>TOP MAGOS</h3>
+                <div id="ranking-list"></div>
+            </div>
+
+            <div id="tab-admin" class="tab-content hidden">
+                <div class="admin-box">
+                    <h3 style="color:white; margin-top:0">MODO PREFECTO</h3>
+                    <input type="password" id="admin-pass" placeholder="Clave de Acceso">
+                    <input type="text" id="admin-target" placeholder="Nombre del Mago">
+                    <input type="number" id="admin-amount" placeholder="Cantidad (+ o -)">
+                    <button class="btn-action" style="background:white; color:black" onclick="adminModificar()">EJECUTAR CAMBIO</button>
                 </div>
             </div>
 
-            <p onclick="logout()" style="text-align:center; font-size:10px; color:#555; cursor:pointer; margin-top:20px;">Cerrar Sesión</p>
+            <p onclick="logout()" style="text-align:center; font-size:9px; color:#555; cursor:pointer; margin-top:20px;">Sellar Bóveda y Salir</p>
         </div>
     </div>
 
 <script>
     const DB_URL = "https://hogwarts-orion-default-rtdb.firebaseio.com/usuarios";
+    const ADMIN_KEY = "Orion2026"; // Cambia tu clave aquí
     let sesion = null;
 
-    const MISIONES = [
-        "Limpia las lechuzas de la torre norte.",
-        "Ordena los frascos de ojos de lagarto.",
-        "Escribe 100 veces 'No debo decir mentiras'.",
-        "Practica tu puntería con el hechizo Depulso.",
-        "Ayuda a Hagrid a buscar a Fang."
-    ];
-
-    const ITEMS = [
+    const MISIONES = ["Limpiar calderos", "Alimentar Thestrals", "Organizar biblioteca", "Cosechar mandrágoras", "Pulir trofeos"];
+    
+    // Estos objetos son base, luego me pasas tu lista
+    const ITEMS_BASE = [
         { n: "Cerveza de Mantequilla", p: 1500, e: "🍻" },
-        { n: "Saeta de Fuego", p: 50000, e: "🧹" },
-        { n: "Félix Felicis", p: 10000, e: "🧪" },
-        { n: "Poción Multijugos", p: 5000, e: "🍵" }
+        { n: "Ranita de Chocolate", p: 500, e: "🐸" },
+        { n: "Poción de Curación", p: 2500, e: "🧪" },
+        { n: "Escoba Nimbus 2000", p: 15000, e: "🧹" }
     ];
 
     async function login() {
@@ -124,7 +136,7 @@
         const r = await fetch(`${DB_URL}/${n}.json`);
         let d = await r.json();
         if(!d) {
-            d = { nombre: n, oro: 0, ultimoReclamo: 0 };
+            d = { nombre: n, oro: 0, ultimoReclamo: 0, inventario: [] };
             await fetch(`${DB_URL}/${n}.json`, { method: 'PUT', body: JSON.stringify(d) });
         }
         sesion = d;
@@ -138,20 +150,18 @@
         document.getElementById('user-name').innerText = sesion.nombre;
         document.getElementById('user-gold').innerText = sesion.oro.toLocaleString();
         
-        // Cargar Misión
         const mIdx = new Date().getDate() % MISIONES.length;
-        document.getElementById('mision-text').innerText = `"${MISIONES[mIdx]}"`;
+        document.getElementById('mision-text').innerText = `Misión: "${MISIONES[mIdx]}"`;
         
-        // Verificar tiempo
-        const cooldown = 86400000;
         const resta = Date.now() - (sesion.ultimoReclamo || 0);
-        if(resta < cooldown) {
+        if(resta < 86400000) {
             document.getElementById('btn-claim').disabled = true;
-            document.getElementById('btn-claim').innerText = "VUELVE MAÑANA";
-            document.getElementById('cd-msg').innerText = "Ya has reclamado tu recompensa diaria.";
+            document.getElementById('btn-claim').innerText = "TAREA REALIZADA";
+            document.getElementById('cd-msg').innerText = "Vuelve mañana.";
         }
 
-        loadTienda();
+        renderTienda();
+        renderBaul();
         loadRanking();
     }
 
@@ -165,37 +175,42 @@
     async function reclamar() {
         coinRain();
         const nuevoOro = sesion.oro + 500;
-        const ahora = Date.now();
-        
         await fetch(`${DB_URL}/${sesion.nombre}.json`, {
-            method: 'PATCH',
-            body: JSON.stringify({ oro: nuevoOro, ultimoReclamo: ahora })
+            method: 'PATCH', body: JSON.stringify({ oro: nuevoOro, ultimoReclamo: Date.now() })
         });
-
-        alert("✨ Has reclamado 500 Galeones.");
         location.reload();
     }
 
-    function loadTienda() {
+    function renderTienda() {
         const cont = document.getElementById('tienda-items');
-        cont.innerHTML = ITEMS.map(i => `
+        cont.innerHTML = ITEMS_BASE.map(i => `
             <div class="item-card">
                 <span>${i.e} ${i.n}</span>
-                <button class="tab-btn" onclick="comprar('${i.n}', ${i.p})" ${sesion.oro < i.p ? 'disabled' : ''}>
-                    ${i.p}G
-                </button>
+                <button class="tab-btn" style="max-width:80px" onclick="comprar('${i.n}', '${i.e}', ${i.p})" ${sesion.oro < i.p ? 'disabled' : ''}>${i.p}G</button>
             </div>
         `).join('');
     }
 
-    async function comprar(nombre, precio) {
+    async function comprar(nombre, emoji, precio) {
         if(confirm(`¿Comprar ${nombre}?`)) {
-            const nuevoOro = sesion.oro - precio;
+            const inv = sesion.inventario || [];
+            inv.push({ n: nombre, e: emoji });
             await fetch(`${DB_URL}/${sesion.nombre}.json`, {
                 method: 'PATCH',
-                body: JSON.stringify({ oro: nuevoOro })
+                body: JSON.stringify({ oro: sesion.oro - precio, inventario: inv })
             });
             location.reload();
+        }
+    }
+
+    function renderBaul() {
+        const cont = document.getElementById('baul-grid');
+        const inv = sesion.inventario || [];
+        if(inv.length === 0) cont.innerHTML = "<p style='grid-column: 1/4; text-align:center; font-size:10px;'>Baúl vacío...</p>";
+        else {
+            cont.innerHTML = inv.map(i => `
+                <div class="inv-slot">${i.e}<span class="inv-name">${i.n}</span></div>
+            `).join('');
         }
     }
 
@@ -206,9 +221,28 @@
         document.getElementById('ranking-list').innerHTML = lista.map((u, i) => `
             <div class="rank-item">
                 <span><span class="rank-pos">${i+1}.</span> ${u.nombre}</span>
-                <span style="color:var(--gold)">${u.oro.toLocaleString()} 🪙</span>
+                <span style="color:var(--gold)">${u.oro.toLocaleString()}G</span>
             </div>
         `).join('');
+    }
+
+    async function adminModificar() {
+        const pass = document.getElementById('admin-pass').value;
+        const target = document.getElementById('admin-target').value.toUpperCase();
+        const amount = parseInt(document.getElementById('admin-amount').value);
+
+        if(pass !== ADMIN_KEY) return alert("Clave de Prefecto Incorrecta");
+        
+        const res = await fetch(`${DB_URL}/${target}.json`);
+        const user = await res.json();
+        if(!user) return alert("Usuario no encontrado");
+
+        await fetch(`${DB_URL}/${target}.json`, {
+            method: 'PATCH',
+            body: JSON.stringify({ oro: (user.oro || 0) + amount })
+        });
+        alert(`Transacción exitosa para ${target}`);
+        location.reload();
     }
 
     function coinRain() {
@@ -219,21 +253,13 @@
             c.style.top = '-20px';
             c.style.transition = `all ${Math.random()*2 + 1}s linear`;
             document.body.appendChild(c);
-            setTimeout(() => {
-                c.style.top = '100vh';
-                c.style.opacity = '0';
-            }, 10);
+            setTimeout(() => { c.style.top = '100vh'; c.style.opacity = '0'; }, 10);
             setTimeout(() => c.remove(), 3000);
         }
     }
 
     function logout() { localStorage.removeItem('magus_id'); location.reload(); }
-
-    window.onload = () => {
-        const s = localStorage.getItem('magus_id');
-        if(s) { document.getElementById('username').value = s; login(); }
-    }
+    window.onload = () => { const s = localStorage.getItem('magus_id'); if(s) { document.getElementById('username').value = s; login(); } }
 </script>
 </body>
 </html>
-
