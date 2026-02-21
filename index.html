@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts Orión - Sistema Real</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Special+Elite&display=swap');
+
+        :root {
+            --gold: #d4af37; --gold-dark: #8b6d45;
+            --dark: #0a0a0b; --dark-blue: #161b22;
+        }
+
+        body {
+            margin: 0; background: var(--dark); color: white;
+            font-family: 'Special Elite', serif; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; padding: 20px;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .main-container {
+            width: 100%; max-width: 450px; background: var(--dark-blue);
+            border: 2px solid var(--gold); border-radius: 15px;
+            padding: 20px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            box-sizing: border-box; position: relative;
+        }
+
+        h1, h2 { font-family: 'Cinzel', serif; color: var(--gold); text-align: center; margin: 10px 0; }
+        .tab-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px; flex: 1; cursor: pointer; font-family: 'Cinzel'; font-size: 10px; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold); color: black; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+
+        /* --- ESTADÍSTICAS --- */
+        .stats-banner { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); margin-bottom: 20px; }
+        .gold-count { font-size: 24px; color: var(--gold); font-weight: bold; }
+
+        /* --- TIENDA Y RANKING --- */
+        .item-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(212,175,55,0.1); }
+        .rank-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(212,175,55,0.1); }
+        .rank-pos { color: var(--gold); font-weight: bold; margin-right: 10px; }
+
+        /* --- BOTONES --- */
+        .btn-action { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px; width: 100%; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; border-radius: 5px; }
+        .btn-action:hover:not(:disabled) { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+        .btn-action:disabled { color: #444; border-color: #444; }
+
+        /* --- EFECTO MONEDAS --- */
+        .coin { position: fixed; width: 20px; height: 20px; background: #ffd700; border-radius: 50%; pointer-events: none; z-index: 999; border: 1px solid #b8860b; box-shadow: 0 0 5px gold; }
+
+        /* --- LOGIN --- */
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--gold); margin-bottom: 10px; border-radius: 5px; box-sizing: border-box; text-align: center; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <h1>BÓVEDA REAL</h1>
+        
+        <div id="login-zone">
+            <input type="text" id="username" placeholder="Tu nombre de mago/bruja">
+            <button class="btn-action" onclick="login()">ACCEDER</button>
+        </div>
+
+        <div id="app-zone" class="hidden">
+            <div class="stats-banner">
+                <div style="font-size: 10px; color: #888;">MAGO: <span id="user-name" style="color:white"></span></div>
+                <div class="gold-count"><span id="user-gold">0</span> 🪙</div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('mision')">MISIÓN</button>
+                <button class="tab-btn" onclick="showTab('tienda')">TIENDA</button>
+                <button class="tab-btn" onclick="showTab('ranking')">RANKING</button>
+            </div>
+
+            <div id="tab-mision" class="tab-content">
+                <div style="text-align:center; padding: 20px;">
+                    <p id="mision-text" style="font-style: italic; min-height: 50px;"></p>
+                    <button id="btn-claim" class="btn-action" onclick="reclamar()">RECLAMAR 500G</button>
+                    <p id="cd-msg" style="font-size: 11px; color: #888; margin-top: 10px;"></p>
+                </div>
+            </div>
+
+            <div id="tab-tienda" class="tab-content hidden">
+                <div id="tienda-items">
+                    </div>
+            </div>
+
+            <div id="tab-ranking" class="tab-content hidden">
+                <div id="ranking-list">
+                    <p style="text-align:center">Consultando pergaminos...</p>
+                </div>
+            </div>
+
+            <p onclick="logout()" style="text-align:center; font-size:10px; color:#555; cursor:pointer; margin-top:20px;">Cerrar Sesión</p>
+        </div>
+    </div>
+
+<script>
+    const DB_URL = "https://hogwarts-orion-default-rtdb.firebaseio.com/usuarios";
+    let sesion = null;
+
+    const MISIONES = [
+        "Limpia las lechuzas de la torre norte.",
+        "Ordena los frascos de ojos de lagarto.",
+        "Escribe 100 veces 'No debo decir mentiras'.",
+        "Practica tu puntería con el hechizo Depulso.",
+        "Ayuda a Hagrid a buscar a Fang."
+    ];
+
+    const ITEMS = [
+        { n: "Cerveza de Mantequilla", p: 1500, e: "🍻" },
+        { n: "Saeta de Fuego", p: 50000, e: "🧹" },
+        { n: "Félix Felicis", p: 10000, e: "🧪" },
+        { n: "Poción Multijugos", p: 5000, e: "🍵" }
+    ];
+
+    async function login() {
+        const n = document.getElementById('username').value.trim().toUpperCase();
+        if(!n) return;
+        const r = await fetch(`${DB_URL}/${n}.json`);
+        let d = await r.json();
+        if(!d) {
+            d = { nombre: n, oro: 0, ultimoReclamo: 0 };
+            await fetch(`${DB_URL}/${n}.json`, { method: 'PUT', body: JSON.stringify(d) });
+        }
+        sesion = d;
+        localStorage.setItem('magus_id', n);
+        start();
+    }
+
+    function start() {
+        document.getElementById('login-zone').classList.add('hidden');
+        document.getElementById('app-zone').classList.remove('hidden');
+        document.getElementById('user-name').innerText = sesion.nombre;
+        document.getElementById('user-gold').innerText = sesion.oro.toLocaleString();
+        
+        // Cargar Misión
+        const mIdx = new Date().getDate() % MISIONES.length;
+        document.getElementById('mision-text').innerText = `"${MISIONES[mIdx]}"`;
+        
+        // Verificar tiempo
+        const cooldown = 86400000;
+        const resta = Date.now() - (sesion.ultimoReclamo || 0);
+        if(resta < cooldown) {
+            document.getElementById('btn-claim').disabled = true;
+            document.getElementById('btn-claim').innerText = "VUELVE MAÑANA";
+            document.getElementById('cd-msg').innerText = "Ya has reclamado tu recompensa diaria.";
+        }
+
+        loadTienda();
+        loadRanking();
+    }
+
+    function showTab(t) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-'+t).classList.remove('hidden');
+        event.currentTarget.classList.add('active');
+    }
+
+    async function reclamar() {
+        coinRain();
+        const nuevoOro = sesion.oro + 500;
+        const ahora = Date.now();
+        
+        await fetch(`${DB_URL}/${sesion.nombre}.json`, {
+            method: 'PATCH',
+            body: JSON.stringify({ oro: nuevoOro, ultimoReclamo: ahora })
+        });
+
+        alert("✨ Has reclamado 500 Galeones.");
+        location.reload();
+    }
+
+    function loadTienda() {
+        const cont = document.getElementById('tienda-items');
+        cont.innerHTML = ITEMS.map(i => `
+            <div class="item-card">
+                <span>${i.e} ${i.n}</span>
+                <button class="tab-btn" onclick="comprar('${i.n}', ${i.p})" ${sesion.oro < i.p ? 'disabled' : ''}>
+                    ${i.p}G
+                </button>
+            </div>
+        `).join('');
+    }
+
+    async function comprar(nombre, precio) {
+        if(confirm(`¿Comprar ${nombre}?`)) {
+            const nuevoOro = sesion.oro - precio;
+            await fetch(`${DB_URL}/${sesion.nombre}.json`, {
+                method: 'PATCH',
+                body: JSON.stringify({ oro: nuevoOro })
+            });
+            location.reload();
+        }
+    }
+
+    async function loadRanking() {
+        const r = await fetch(`${DB_URL}.json`);
+        const d = await r.json();
+        const lista = Object.values(d).sort((a,b) => b.oro - a.oro).slice(0,10);
+        document.getElementById('ranking-list').innerHTML = lista.map((u, i) => `
+            <div class="rank-item">
+                <span><span class="rank-pos">${i+1}.</span> ${u.nombre}</span>
+                <span style="color:var(--gold)">${u.oro.toLocaleString()} 🪙</span>
+            </div>
+        `).join('');
+    }
+
+    function coinRain() {
+        for(let i=0; i<30; i++) {
+            const c = document.createElement('div');
+            c.className = 'coin';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.top = '-20px';
+            c.style.transition = `all ${Math.random()*2 + 1}s linear`;
+            document.body.appendChild(c);
+            setTimeout(() => {
+                c.style.top = '100vh';
+                c.style.opacity = '0';
+            }, 10);
+            setTimeout(() => c.remove(), 3000);
+        }
+    }
+
+    function logout() { localStorage.removeItem('magus_id'); location.reload(); }
+
+    window.onload = () => {
+        const s = localStorage.getItem('magus_id');
+        if(s) { document.getElementById('username').value = s; login(); }
+    }
+</script>
+</body>
+</html>
+
