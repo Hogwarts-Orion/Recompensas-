@@ -89,7 +89,6 @@
             transition: width 1s ease-in-out;
         }
 
-        /* EFECTO CUANDO LLEGA A 200 */
         .full-energy {
             animation: pulseEnergy 1.5s infinite alternate;
             background: linear-gradient(90deg, #fff, var(--gold), #fff) !important;
@@ -107,6 +106,14 @@
             border-radius: 15px;
             margin: 20px 0;
             animation: slideDown 1s ease;
+        }
+
+        /* NUEVA SECCIÓN DE LEGADO */
+        .legacy-section {
+            margin: 60px 0;
+            padding: 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
         }
 
         .magic-card {
@@ -141,6 +148,8 @@
             cursor: pointer;
             font-family: 'Cinzel', serif;
             transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-magic:hover { transform: scale(1.05); box-shadow: 0 0 20px white; }
 
@@ -202,9 +211,9 @@
     </div>
 
     <div id="reward-section" class="hidden">
-        <h2 style="font-family: 'Dancing Script', cursive; color: #fff;">¡Meta de Poder Alcanzada!</h2>
-        <p>La Dirección de Hogwarts Orión reconoce la lealtad de sus miembros. El portal está sobrecargado de magia.</p>
-        <button class="btn-magic btn-reward" onclick="window.open('URL_DE_TU_DIPLOMA_O_FOTO')">RECLAMAR RECOMPENSA DEL BIENIO</button>
+        <h2 style="font-family: 'Dancing Script', cursive; color: #fff;">¡Portal de Recompensas Abierto!</h2>
+        <p>La Dirección de Hogwarts Orión reconoce tu lealtad infinita. Tu diploma de Fundador te espera.</p>
+        <a href="https://hogwarts-orion.github.io/Certificado-/" class="btn-magic btn-reward">OBTENER DIPLOMA DE FUNDADOR</a>
     </div>
 
     <div class="magic-card" id="capsule-box">
@@ -212,6 +221,12 @@
         <h3 id="capsule-title">Cápsula del Tiempo</h3>
         <p id="capsule-text">Se abrirá el 15 de agosto de 2026.</p>
     </div>
+
+    <section class="legacy-section">
+        <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold); font-size: 2.2rem;">Inmortaliza tu Legado</h2>
+        <p style="font-style: italic; color: #ccc; margin-bottom: 30px;">"Porque Hogwarts Orión no son sus muros, sino el alma de quienes creyeron en este sueño."</p>
+        <a href="https://hogwarts-orion.github.io/Certificado-/" class="btn-magic" style="letter-spacing: 2px;">RECLAMAR MI LUGAR EN LA HISTORIA</a>
+    </section>
 
     <section id="pre-anniversary" class="magic-card">
         <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Libro de Deseos</h2>
@@ -287,7 +302,6 @@
                 list.innerHTML += `<div class="entry"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
             });
 
-            // LÓGICA DE META (200)
             const count = entries.length;
             const progress = (count / 200) * 100;
             const bar = document.getElementById('energy-fill');
@@ -304,7 +318,6 @@
         }
     });
 
-    // --- MOMENTOS POST-ANIVERSARIO ---
     function sendMoment() {
         const n = document.getElementById('nameMoment').value;
         const t = document.getElementById('textMoment').value;
@@ -325,7 +338,6 @@
         }
     });
 
-    // --- ESTRELLAS DE FONDO ---
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -343,7 +355,6 @@
     }
     animate();
 
-    // RASTRO DE VARITA
     document.addEventListener('mousemove', (e) => {
         const flare = document.createElement('div');
         flare.className = 'cursor-flare';
