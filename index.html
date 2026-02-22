@@ -40,7 +40,6 @@
             text-align: center;
         }
 
-        /* HEADER DIRECCIÓN */
         .directorate-banner {
             border: 2px solid var(--gold);
             padding: 30px;
@@ -58,7 +57,6 @@
             text-shadow: 0 0 20px var(--gold);
         }
 
-        /* CONTADOR */
         .countdown-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -75,9 +73,9 @@
         .time-card span { display: block; font-size: 2.5rem; font-weight: 900; }
         .time-card small { color: var(--gold); text-transform: uppercase; font-size: 0.7rem; }
 
-        /* BARRA DE ENERGÍA */
+        /* BARRA DE ENERGÍA EVOLUTIVA */
         .progress-bar-bg {
-            width: 100%; height: 12px;
+            width: 100%; height: 14px;
             background: #111;
             border-radius: 10px;
             border: 1px solid var(--gold);
@@ -91,7 +89,26 @@
             transition: width 1s ease-in-out;
         }
 
-        /* CÁPSULA Y SECCIONES */
+        /* EFECTO CUANDO LLEGA A 200 */
+        .full-energy {
+            animation: pulseEnergy 1.5s infinite alternate;
+            background: linear-gradient(90deg, #fff, var(--gold), #fff) !important;
+        }
+        @keyframes pulseEnergy {
+            from { box-shadow: 0 0 10px #fff; }
+            to { box-shadow: 0 0 30px var(--gold); filter: brightness(1.5); }
+        }
+
+        /* RECOMPENSA SECRETA */
+        #reward-section {
+            background: linear-gradient(rgba(212,175,55,0.2), rgba(0,0,0,0.9));
+            border: 2px gold double;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            animation: slideDown 1s ease;
+        }
+
         .magic-card {
             background: rgba(0,0,0,0.8);
             border: 1px solid var(--gold);
@@ -127,30 +144,33 @@
         }
         .btn-magic:hover { transform: scale(1.05); box-shadow: 0 0 20px white; }
 
-        /* MOMENTOS Y FEED */
-        #feed-wishes, #feed-momentos {
-            margin-top: 30px;
-            text-align: left;
-            max-height: 500px;
-            overflow-y: auto;
+        .btn-reward {
+            background: white;
+            color: #000;
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            border: 4px double var(--gold);
+            animation: pulse 2s infinite;
         }
+
         .entry {
             background: rgba(212, 175, 55, 0.05);
             padding: 20px;
             border-left: 4px solid var(--gold);
             margin-bottom: 15px;
-            animation: fadeIn 0.5s ease;
+            text-align: left;
         }
         .entry b { color: var(--gold); font-size: 0.9rem; }
         .entry p { font-family: 'Dancing Script', cursive; font-size: 1.3rem; margin: 5px 0 0; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .cursor-flare {
             position: fixed; width: 8px; height: 8px; background: var(--gold);
             border-radius: 50%; pointer-events: none; z-index: 9999;
             box-shadow: 0 0 10px var(--gold);
         }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         footer { margin-top: 60px; color: #444; font-size: 0.7rem; letter-spacing: 3px; }
     </style>
@@ -173,11 +193,18 @@
             <div class="time-card"><span id="mins">00</span><small>Min</small></div>
             <div class="time-card"><span id="secs">00</span><small>Seg</small></div>
         </div>
+        
         <div class="energy-section">
-            <h3 style="font-size: 0.8rem; color: var(--gold);">PODER ASTRAL COLECTIVO</h3>
+            <h3 id="energy-header" style="font-size: 0.9rem; color: var(--gold);">PODER ASTRAL COLECTIVO</h3>
             <div class="progress-bar-bg"><div id="energy-fill"></div></div>
-            <p id="energy-count" style="font-size: 0.7rem;">Cargando firmas...</p>
+            <p id="energy-count" style="font-size: 0.8rem;">Sintonizando con los astros...</p>
         </div>
+    </div>
+
+    <div id="reward-section" class="hidden">
+        <h2 style="font-family: 'Dancing Script', cursive; color: #fff;">¡Meta de Poder Alcanzada!</h2>
+        <p>La Dirección de Hogwarts Orión reconoce la lealtad de sus miembros. El portal está sobrecargado de magia.</p>
+        <button class="btn-magic btn-reward" onclick="window.open('URL_DE_TU_DIPLOMA_O_FOTO')">RECLAMAR RECOMPENSA DEL BIENIO</button>
     </div>
 
     <div class="magic-card" id="capsule-box">
@@ -188,18 +215,17 @@
 
     <section id="pre-anniversary" class="magic-card">
         <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Libro de Deseos</h2>
-        <input type="text" id="nameWish" placeholder="Nombre del Mago/Bruja">
+        <input type="text" id="nameWish" placeholder="Nombre del Mago o Bruja">
         <textarea id="textWish" rows="3" placeholder="Tu deseo para el futuro de Orión..."></textarea>
-        <button class="btn-magic" onclick="sendWish()">GRABAR DESEO</button>
+        <button class="btn-magic" onclick="sendWish()">GRABAR EN EL DESTINO</button>
         <div id="feed-wishes"></div>
     </section>
 
     <section id="post-anniversary" class="magic-card hidden">
         <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Galería de Momentos: 2do Año</h2>
-        <p>¡El aniversario ha llegado! Comparte tu recuerdo favorito del año pasado:</p>
-        <input type="text" id="nameMoment" placeholder="Nombre">
-        <textarea id="textMoment" rows="3" placeholder="Describe tu momento favorito..."></textarea>
-        <button class="btn-magic" onclick="sendMoment()">POSTEAR MOMENTO</button>
+        <input type="text" id="nameMoment" placeholder="Tu Nombre">
+        <textarea id="textMoment" rows="3" placeholder="Tu momento favorito del año pasado..."></textarea>
+        <button class="btn-magic" onclick="sendMoment()">PUBLICAR MEMORIA</button>
         <div id="feed-momentos"></div>
     </section>
 
@@ -210,31 +236,30 @@
 </div>
 
 <script>
-    // --- FIREBASE CONFIG ---
+    // --- FIREBASE ---
     const firebaseConfig = { databaseURL: "https://aniversario-20dcc-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     const targetDate = new Date("August 15, 2026 00:00:00").getTime();
+    let goalReached = false;
 
-    // --- LÓGICA DE TIEMPO Y ERAS ---
+    // --- RELOJ Y ERAS ---
     function updateMaster() {
         const now = new Date().getTime();
         const diff = targetDate - now;
 
         if (diff <= 0) {
-            // ERA DEL ANIVERSARIO
             document.getElementById('countdown-section').classList.add('hidden');
             document.getElementById('pre-anniversary').classList.add('hidden');
             document.getElementById('post-anniversary').classList.remove('hidden');
-            document.getElementById('era-title').innerText = "¡Feliz 2do Aniversario!";
+            document.getElementById('era-title').innerText = "¡FELIZ ANIVERSARIO!";
             document.getElementById('lock-icon').innerText = "🔓";
             document.getElementById('capsule-title').innerText = "Cápsula Abierta";
-            document.getElementById('capsule-text').innerText = "El legado del Bienio ha sido revelado.";
+            document.getElementById('capsule-text').innerText = "El legado ha sido revelado.";
             return;
         }
 
-        // ACTUALIZAR RELOJ
         document.getElementById('days').innerText = Math.floor(diff / 86400000);
         document.getElementById('hours').innerText = Math.floor((diff % 86400000) / 3600000);
         document.getElementById('mins').innerText = Math.floor((diff % 3600000) / 60000);
@@ -242,26 +267,16 @@
     }
     setInterval(updateMaster, 1000);
 
-    // --- FUNCIONES FIREBASE ---
+    // --- FIREBASE LOGIC ---
     function sendWish() {
         const n = document.getElementById('nameWish').value;
         const t = document.getElementById('textWish').value;
         if(!n || !t) return;
         db.ref('deseos').push({ nombre: n, texto: t, time: Date.now() });
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#d4af37', '#fff'] });
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         document.getElementById('nameWish').value = ""; document.getElementById('textWish').value = "";
     }
 
-    function sendMoment() {
-        const n = document.getElementById('nameMoment').value;
-        const t = document.getElementById('textMoment').value;
-        if(!n || !t) return;
-        db.ref('momentos').push({ nombre: n, texto: t, time: Date.now() });
-        confetti({ particleCount: 150, shapes: ['star'], colors: ['#d4af37'] });
-        document.getElementById('nameMoment').value = ""; document.getElementById('textMoment').value = "";
-    }
-
-    // Escuchar Deseos
     db.ref('deseos').on('value', snap => {
         const list = document.getElementById('feed-wishes');
         list.innerHTML = "";
@@ -271,26 +286,46 @@
             entries.forEach(e => {
                 list.innerHTML += `<div class="entry"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
             });
-            // Actualizar barra (meta 200)
+
+            // LÓGICA DE META (200)
             const count = entries.length;
-            document.getElementById('energy-fill').style.width = Math.min((count/200)*100, 100) + "%";
+            const progress = (count / 200) * 100;
+            const bar = document.getElementById('energy-fill');
+            bar.style.width = Math.min(progress, 100) + "%";
             document.getElementById('energy-count').innerText = `${count} / 200 Firmas de Poder`;
+
+            if(count >= 200 && !goalReached) {
+                goalReached = true;
+                bar.classList.add('full-energy');
+                document.getElementById('energy-header').innerText = "¡ESTADO DE SUPERNOVA!";
+                document.getElementById('reward-section').classList.remove('hidden');
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#fff', '#d4af37'] });
+            }
         }
     });
 
-    // Escuchar Momentos
+    // --- MOMENTOS POST-ANIVERSARIO ---
+    function sendMoment() {
+        const n = document.getElementById('nameMoment').value;
+        const t = document.getElementById('textMoment').value;
+        if(!n || !t) return;
+        db.ref('momentos').push({ nombre: n, texto: t, time: Date.now() });
+        confetti({ particleCount: 100, shapes: ['star'] });
+        document.getElementById('nameMoment').value = ""; document.getElementById('textMoment').value = "";
+    }
+
     db.ref('momentos').on('value', snap => {
         const list = document.getElementById('feed-momentos');
         list.innerHTML = "";
         const data = snap.val();
         if(data) {
             Object.values(data).reverse().forEach(e => {
-                list.innerHTML += `<div class="entry" style="border-left-color: white;"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
+                list.innerHTML += `<div class="entry" style="border-left-color: #fff;"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
             });
         }
     });
 
-    // --- EFECTOS VISUALES ---
+    // --- ESTRELLAS DE FONDO ---
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -299,15 +334,16 @@
     
     function animate() {
         ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(212,175,55,0.6)";
+        ctx.fillStyle = "rgba(212,175,55,0.4)";
         stars.forEach(s => {
             ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill();
-            s.y += 0.2; if(s.y > canvas.height) s.y = 0;
+            s.y += 0.15; if(s.y > canvas.height) s.y = 0;
         });
         requestAnimationFrame(animate);
     }
     animate();
 
+    // RASTRO DE VARITA
     document.addEventListener('mousemove', (e) => {
         const flare = document.createElement('div');
         flare.className = 'cursor-flare';
