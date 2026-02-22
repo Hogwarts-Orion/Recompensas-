@@ -89,31 +89,25 @@
             transition: width 1s ease-in-out;
         }
 
+        /* ÉXTASIS ASTRAL (200 FIRMAS) */
         .full-energy {
-            animation: pulseEnergy 1.5s infinite alternate;
-            background: linear-gradient(90deg, #fff, var(--gold), #fff) !important;
+            animation: pulseEnergy 1s infinite alternate;
+            background: linear-gradient(90deg, #fff, #d4af37, #fff) !important;
         }
         @keyframes pulseEnergy {
-            from { box-shadow: 0 0 10px #fff; }
-            to { box-shadow: 0 0 30px var(--gold); filter: brightness(1.5); }
+            from { box-shadow: 0 0 20px #fff; filter: brightness(1); }
+            to { box-shadow: 0 0 50px var(--gold); filter: brightness(1.8); }
         }
 
         /* RECOMPENSA SECRETA */
         #reward-section {
-            background: linear-gradient(rgba(212,175,55,0.2), rgba(0,0,0,0.9));
-            border: 2px gold double;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 20px 0;
-            animation: slideDown 1s ease;
-        }
-
-        /* NUEVA SECCIÓN DE LEGADO */
-        .legacy-section {
-            margin: 60px 0;
+            background: linear-gradient(rgba(212,175,55,0.2), rgba(0,0,0,0.95));
+            border: 3px double var(--gold);
             padding: 40px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            border-radius: 20px;
+            margin: 40px 0;
+            animation: slideDown 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
         }
 
         .magic-card {
@@ -156,10 +150,11 @@
         .btn-reward {
             background: white;
             color: #000;
-            padding: 20px 50px;
-            font-size: 1.2rem;
+            padding: 22px 60px;
+            font-size: 1.3rem;
             border: 4px double var(--gold);
             animation: pulse 2s infinite;
+            letter-spacing: 2px;
         }
 
         .entry {
@@ -178,8 +173,8 @@
             box-shadow: 0 0 10px var(--gold);
         }
 
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 10px white; } 50% { transform: scale(1.05); box-shadow: 0 0 30px var(--gold); } 100% { transform: scale(1); box-shadow: 0 0 10px white; } }
 
         footer { margin-top: 60px; color: #444; font-size: 0.7rem; letter-spacing: 3px; }
     </style>
@@ -211,9 +206,13 @@
     </div>
 
     <div id="reward-section" class="hidden">
-        <h2 style="font-family: 'Dancing Script', cursive; color: #fff;">¡Portal de Recompensas Abierto!</h2>
-        <p>La Dirección de Hogwarts Orión reconoce tu lealtad infinita. Tu diploma de Fundador te espera.</p>
-        <a href="https://hogwarts-orion.github.io/Certificado-/" class="btn-magic btn-reward">OBTENER DIPLOMA DE FUNDADOR</a>
+        <h2 style="font-family: 'Cinzel Decorative', cursive; color: #fff; font-size: 2.2rem;">ÉXTASIS ASTRAL ALCANZADO</h2>
+        <p style="font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: var(--gold-bright);">
+            "La lealtad de 200 almas ha sobrecargado el portal. Vuestro legado ha sido grabado en el firmamento."
+        </p>
+        <p style="font-size: 0.9rem; margin-top: 15px;">Como Guardián del Círculo Original, reclama tu diploma oficial:</p>
+        <br>
+        <a href="https://hogwarts-orion.github.io/Certificado-/" class="btn-magic btn-reward">RECLAMAR DIPLOMA DEL BIENIO</a>
     </div>
 
     <div class="magic-card" id="capsule-box">
@@ -222,14 +221,9 @@
         <p id="capsule-text">Se abrirá el 15 de agosto de 2026.</p>
     </div>
 
-    <section class="legacy-section">
-        <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold); font-size: 2.2rem;">Inmortaliza tu Legado</h2>
-        <p style="font-style: italic; color: #ccc; margin-bottom: 30px;">"Porque Hogwarts Orión no son sus muros, sino el alma de quienes creyeron en este sueño."</p>
-        <a href="https://hogwarts-orion.github.io/Certificado-/" class="btn-magic" style="letter-spacing: 2px;">RECLAMAR MI LUGAR EN LA HISTORIA</a>
-    </section>
-
     <section id="pre-anniversary" class="magic-card">
         <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Libro de Deseos</h2>
+        <p style="font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 1px;">Suma tu firma para alcanzar las 200 y desbloquear el Legado.</p>
         <input type="text" id="nameWish" placeholder="Nombre del Mago o Bruja">
         <textarea id="textWish" rows="3" placeholder="Tu deseo para el futuro de Orión..."></textarea>
         <button class="btn-magic" onclick="sendWish()">GRABAR EN EL DESTINO</button>
@@ -251,7 +245,7 @@
 </div>
 
 <script>
-    // --- FIREBASE ---
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = { databaseURL: "https://aniversario-20dcc-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -259,7 +253,7 @@
     const targetDate = new Date("August 15, 2026 00:00:00").getTime();
     let goalReached = false;
 
-    // --- RELOJ Y ERAS ---
+    // --- RELOJ Y LÓGICA DE TIEMPO ---
     function updateMaster() {
         const now = new Date().getTime();
         const diff = targetDate - now;
@@ -282,13 +276,13 @@
     }
     setInterval(updateMaster, 1000);
 
-    // --- FIREBASE LOGIC ---
+    // --- LÓGICA DE FIRMAS (META 200) ---
     function sendWish() {
         const n = document.getElementById('nameWish').value;
         const t = document.getElementById('textWish').value;
         if(!n || !t) return;
         db.ref('deseos').push({ nombre: n, texto: t, time: Date.now() });
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#d4af37', '#ffffff'] });
         document.getElementById('nameWish').value = ""; document.getElementById('textWish').value = "";
     }
 
@@ -308,16 +302,32 @@
             bar.style.width = Math.min(progress, 100) + "%";
             document.getElementById('energy-count').innerText = `${count} / 200 Firmas de Poder`;
 
+            // ACTIVACIÓN DE ÉXTASIS ASTRAL
             if(count >= 200 && !goalReached) {
                 goalReached = true;
                 bar.classList.add('full-energy');
                 document.getElementById('energy-header').innerText = "¡ESTADO DE SUPERNOVA!";
                 document.getElementById('reward-section').classList.remove('hidden');
-                confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#fff', '#d4af37'] });
+                
+                // Lluvia masiva de estrellas
+                var duration = 5 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+                function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+                var interval = setInterval(function() {
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) { return clearInterval(interval); }
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
             }
         }
     });
 
+    // --- MOMENTOS POST-ANIVERSARIO ---
     function sendMoment() {
         const n = document.getElementById('nameMoment').value;
         const t = document.getElementById('textMoment').value;
@@ -338,6 +348,7 @@
         }
     });
 
+    // --- FONDO ANIMADO ---
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
