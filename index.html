@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hogwarts Orión | La Gran Crónica del Bienio</title>
+    <title>Hogwarts Orión | Crónicas del Bienio</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
@@ -26,9 +26,9 @@
             font-family: 'Cinzel', serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            cursor: crosshair;
         }
 
-        /* FONDO ESPACIAL DINÁMICO */
         #star-canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
 
         .universe {
@@ -37,50 +37,28 @@
             padding: 40px 20px;
             position: relative;
             z-index: 10;
+            text-align: center;
         }
 
         /* HEADER DIRECCIÓN */
         .directorate-banner {
-            text-align: center;
             border: 2px solid var(--gold);
             padding: 30px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
             border-radius: 0 0 50px 50px;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .main-title {
             font-family: 'Cinzel Decorative', cursive;
-            font-size: clamp(2rem, 8vw, 4.5rem);
+            font-size: clamp(2rem, 8vw, 4rem);
             color: var(--gold);
             margin: 10px 0;
             text-shadow: 0 0 20px var(--gold);
         }
 
-        /* BARRA DE ENERGÍA COLECTIVA */
-        .energy-section {
-            margin: 40px 0;
-            text-align: center;
-        }
-        .progress-bar-bg {
-            width: 100%;
-            height: 15px;
-            background: #111;
-            border-radius: 10px;
-            border: 1px solid var(--gold);
-            overflow: hidden;
-            margin: 15px 0;
-        }
-        #energy-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold), #fff);
-            box-shadow: 0 0 15px var(--gold);
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* TEMPORIZADOR PREMIUM */
+        /* CONTADOR */
         .countdown-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -97,28 +75,37 @@
         .time-card span { display: block; font-size: 2.5rem; font-weight: 900; }
         .time-card small { color: var(--gold); text-transform: uppercase; font-size: 0.7rem; }
 
-        /* CÁPSULA DEL TIEMPO */
-        .time-capsule {
-            background: url('https://www.transparenttextures.com/patterns/dark-matter.png'), linear-gradient(rgba(212,175,55,0.1), transparent);
-            border: 1px dashed var(--gold);
-            padding: 40px;
-            border-radius: 20px;
-            margin: 60px 0;
-            cursor: not-allowed;
-            position: relative;
-        }
-        .lock-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
-
-        /* LIBRO DE FIRMAS */
-        .signature-book {
-            background: rgba(0,0,0,0.8);
-            border-radius: 20px;
-            padding: 40px;
+        /* BARRA DE ENERGÍA */
+        .progress-bar-bg {
+            width: 100%; height: 12px;
+            background: #111;
+            border-radius: 10px;
             border: 1px solid var(--gold);
+            overflow: hidden;
+            margin: 15px 0;
         }
+        #energy-fill {
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, var(--gold), #fff);
+            box-shadow: 0 0 15px var(--gold);
+            transition: width 1s ease-in-out;
+        }
+
+        /* CÁPSULA Y SECCIONES */
+        .magic-card {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--gold);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hidden { display: none !important; }
+
         input, textarea {
             width: 90%;
-            background: #111;
+            background: #0a0a0a;
             border: 1px solid var(--gold);
             color: white;
             padding: 15px;
@@ -126,6 +113,7 @@
             border-radius: 8px;
             font-family: 'Quicksand', sans-serif;
         }
+
         .btn-magic {
             background: var(--gold);
             color: black;
@@ -135,220 +123,197 @@
             border-radius: 50px;
             cursor: pointer;
             font-family: 'Cinzel', serif;
-            transition: 0.4s;
+            transition: 0.3s;
         }
-        .btn-magic:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); background: #fff; }
+        .btn-magic:hover { transform: scale(1.05); box-shadow: 0 0 20px white; }
 
-        #feed-wishes {
-            margin-top: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-height: 400px;
+        /* MOMENTOS Y FEED */
+        #feed-wishes, #feed-momentos {
+            margin-top: 30px;
+            text-align: left;
+            max-height: 500px;
             overflow-y: auto;
         }
-        .wish-entry {
-            background: rgba(255,255,255,0.03);
+        .entry {
+            background: rgba(212, 175, 55, 0.05);
             padding: 20px;
             border-left: 4px solid var(--gold);
-            text-align: left;
-            animation: slideIn 0.5s ease;
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease;
         }
-        .wish-entry b { color: var(--gold); font-size: 0.9rem; }
-        .wish-entry p { font-family: 'Dancing Script', cursive; font-size: 1.3rem; margin: 10px 0 0; }
+        .entry b { color: var(--gold); font-size: 0.9rem; }
+        .entry p { font-family: 'Dancing Script', cursive; font-size: 1.3rem; margin: 5px 0 0; }
 
-        @keyframes slideIn { from { opacity:0; transform: translateX(-20px); } to { opacity:1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        footer {
-            margin-top: 80px;
-            padding: 40px;
-            color: #555;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-        }
-
-        /* ESTRELLA DE VARITA */
         .cursor-flare {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 15px var(--gold);
+            position: fixed; width: 8px; height: 8px; background: var(--gold);
+            border-radius: 50%; pointer-events: none; z-index: 9999;
+            box-shadow: 0 0 10px var(--gold);
         }
 
+        footer { margin-top: 60px; color: #444; font-size: 0.7rem; letter-spacing: 3px; }
     </style>
 </head>
 <body>
 
-    <canvas id="star-canvas"></canvas>
+<canvas id="star-canvas"></canvas>
 
-    <div class="universe">
-        <header class="directorate-banner">
-            <h2>DIRECCIÓN DE HOGWARTS ORIÓN</h2>
-            <h1 class="main-title">Crónicas del Bienio</h1>
-            <p>"Nihil Est Quod Astris Non Possit"</p>
-        </header>
+<div class="universe">
+    <header class="directorate-banner">
+        <h2>DIRECCIÓN DE HOGWARTS ORIÓN</h2>
+        <h1 class="main-title" id="era-title">Crónicas del Bienio</h1>
+        <p id="era-motto">"Nihil Est Quod Astris Non Possit"</p>
+    </header>
 
+    <div id="countdown-section">
         <div class="countdown-grid">
             <div class="time-card"><span id="days">00</span><small>Días</small></div>
             <div class="time-card"><span id="hours">00</span><small>Horas</small></div>
-            <div class="time-card"><span id="mins">00</span><small>Minutos</small></div>
-            <div class="time-card"><span id="secs">00</span><small>Segundos</small></div>
+            <div class="time-card"><span id="mins">00</span><small>Min</small></div>
+            <div class="time-card"><span id="secs">00</span><small>Seg</small></div>
         </div>
-
         <div class="energy-section">
-            <h3>PODER MÁGICO COLECTIVO</h3>
-            <p style="font-size: 0.8rem;">Cualquier deseo fortalece la luz de Orión. Meta: 200 Firmas.</p>
-            <div class="progress-bar-bg">
-                <div id="energy-fill"></div>
-            </div>
-            <small id="energy-text">Recuperando energía astral...</small>
+            <h3 style="font-size: 0.8rem; color: var(--gold);">PODER ASTRAL COLECTIVO</h3>
+            <div class="progress-bar-bg"><div id="energy-fill"></div></div>
+            <p id="energy-count" style="font-size: 0.7rem;">Cargando firmas...</p>
         </div>
-
-        <div class="time-capsule">
-            <span class="lock-icon">🔒</span>
-            <h3>Cápsula del Tiempo de Orión</h3>
-            <p>Se desbloqueará automáticamente el 15 de agosto de 2026. <br> Aquí descansarán los secretos del primer bienio.</p>
-        </div>
-
-        <section class="signature-book">
-            <h2 style="font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--gold-light);">Libro de Almas y Sueños</h2>
-            <div id="input-area">
-                <input type="text" id="nombreMago" placeholder="Tu Nombre o Apodo Mágico">
-                <textarea id="deseoMago" rows="4" placeholder="¿Qué le dices al futuro de Orión?"></textarea>
-                <button class="btn-magic" onclick="enviarMagia()">CONJURAR DESEO</button>
-            </div>
-
-            <div id="feed-wishes">
-                </div>
-        </section>
-
-        <footer>
-            DIRECCIÓN GENERAL DE HOGWARTS ORIÓN<br>
-            ACTO CONMEMORATIVO 2024 - 2026
-        </footer>
     </div>
 
+    <div class="magic-card" id="capsule-box">
+        <span id="lock-icon" style="font-size: 3rem;">🔒</span>
+        <h3 id="capsule-title">Cápsula del Tiempo</h3>
+        <p id="capsule-text">Se abrirá el 15 de agosto de 2026.</p>
+    </div>
+
+    <section id="pre-anniversary" class="magic-card">
+        <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Libro de Deseos</h2>
+        <input type="text" id="nameWish" placeholder="Nombre del Mago/Bruja">
+        <textarea id="textWish" rows="3" placeholder="Tu deseo para el futuro de Orión..."></textarea>
+        <button class="btn-magic" onclick="sendWish()">GRABAR DESEO</button>
+        <div id="feed-wishes"></div>
+    </section>
+
+    <section id="post-anniversary" class="magic-card hidden">
+        <h2 style="font-family: 'Dancing Script', cursive; color: var(--gold-light);">Galería de Momentos: 2do Año</h2>
+        <p>¡El aniversario ha llegado! Comparte tu recuerdo favorito del año pasado:</p>
+        <input type="text" id="nameMoment" placeholder="Nombre">
+        <textarea id="textMoment" rows="3" placeholder="Describe tu momento favorito..."></textarea>
+        <button class="btn-magic" onclick="sendMoment()">POSTEAR MOMENTO</button>
+        <div id="feed-momentos"></div>
+    </section>
+
+    <footer>
+        DIRECCIÓN GENERAL DE HOGWARTS ORIÓN<br>
+        2024 — 2026
+    </footer>
+</div>
+
 <script>
-    // --- CONEXIÓN FIREBASE ---
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = { databaseURL: "https://aniversario-20dcc-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- ENVIAR DATOS ---
-    function enviarMagia() {
-        const nombre = document.getElementById('nombreMago').value;
-        const deseo = document.getElementById('deseoMago').value;
+    const targetDate = new Date("August 15, 2026 00:00:00").getTime();
 
-        if(!nombre || !deseo) return alert("La Dirección requiere un nombre y un deseo válido.");
+    // --- LÓGICA DE TIEMPO Y ERAS ---
+    function updateMaster() {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
 
-        db.ref('deseos').push({
-            nombre: nombre,
-            deseo: deseo,
-            fecha: Date.now()
-        });
-
-        // Efectos Visuales
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#d4af37', '#ffffff', '#1a1a40']
-        });
-
-        document.getElementById('nombreMago').value = "";
-        document.getElementById('deseoMago').value = "";
-    }
-
-    // --- ESCUCHAR DATOS Y ACTUALIZAR ENERGÍA ---
-    db.ref('deseos').on('value', (snap) => {
-        const feed = document.getElementById('feed-wishes');
-        feed.innerHTML = "";
-        const data = snap.val();
-        let total = 0;
-
-        if(data) {
-            const keys = Object.keys(data);
-            total = keys.length;
-            keys.reverse().forEach(key => {
-                const item = data[key];
-                feed.innerHTML += `
-                    <div class="wish-entry">
-                        <b>${item.nombre.toUpperCase()}</b>
-                        <p>"${item.deseo}"</p>
-                    </div>
-                `;
-            });
+        if (diff <= 0) {
+            // ERA DEL ANIVERSARIO
+            document.getElementById('countdown-section').classList.add('hidden');
+            document.getElementById('pre-anniversary').classList.add('hidden');
+            document.getElementById('post-anniversary').classList.remove('hidden');
+            document.getElementById('era-title').innerText = "¡Feliz 2do Aniversario!";
+            document.getElementById('lock-icon').innerText = "🔓";
+            document.getElementById('capsule-title').innerText = "Cápsula Abierta";
+            document.getElementById('capsule-text').innerText = "El legado del Bienio ha sido revelado.";
+            return;
         }
 
-        // Actualizar Barra de Energía (Meta 200 deseos)
-        const porcentaje = Math.min((total / 200) * 100, 100);
-        document.getElementById('energy-fill').style.width = porcentaje + "%";
-        document.getElementById('energy-text').innerText = `${total} / 200 Firmas de Poder`;
-    });
-
-    // --- CONTADOR ---
-    const target = new Date("August 15, 2026 00:00:00").getTime();
-    setInterval(() => {
-        const now = new Date().getTime();
-        const diff = target - now;
+        // ACTUALIZAR RELOJ
         document.getElementById('days').innerText = Math.floor(diff / 86400000);
         document.getElementById('hours').innerText = Math.floor((diff % 86400000) / 3600000);
         document.getElementById('mins').innerText = Math.floor((diff % 3600000) / 60000);
         document.getElementById('secs').innerText = Math.floor((diff % 60000) / 1000);
-    }, 1000);
+    }
+    setInterval(updateMaster, 1000);
 
-    // --- EFECTO DE ESTRELLAS Y CURSOR ---
+    // --- FUNCIONES FIREBASE ---
+    function sendWish() {
+        const n = document.getElementById('nameWish').value;
+        const t = document.getElementById('textWish').value;
+        if(!n || !t) return;
+        db.ref('deseos').push({ nombre: n, texto: t, time: Date.now() });
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#d4af37', '#fff'] });
+        document.getElementById('nameWish').value = ""; document.getElementById('textWish').value = "";
+    }
+
+    function sendMoment() {
+        const n = document.getElementById('nameMoment').value;
+        const t = document.getElementById('textMoment').value;
+        if(!n || !t) return;
+        db.ref('momentos').push({ nombre: n, texto: t, time: Date.now() });
+        confetti({ particleCount: 150, shapes: ['star'], colors: ['#d4af37'] });
+        document.getElementById('nameMoment').value = ""; document.getElementById('textMoment').value = "";
+    }
+
+    // Escuchar Deseos
+    db.ref('deseos').on('value', snap => {
+        const list = document.getElementById('feed-wishes');
+        list.innerHTML = "";
+        const data = snap.val();
+        if(data) {
+            const entries = Object.values(data).reverse();
+            entries.forEach(e => {
+                list.innerHTML += `<div class="entry"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
+            });
+            // Actualizar barra (meta 200)
+            const count = entries.length;
+            document.getElementById('energy-fill').style.width = Math.min((count/200)*100, 100) + "%";
+            document.getElementById('energy-count').innerText = `${count} / 200 Firmas de Poder`;
+        }
+    });
+
+    // Escuchar Momentos
+    db.ref('momentos').on('value', snap => {
+        const list = document.getElementById('feed-momentos');
+        list.innerHTML = "";
+        const data = snap.val();
+        if(data) {
+            Object.values(data).reverse().forEach(e => {
+                list.innerHTML += `<div class="entry" style="border-left-color: white;"><b>${e.nombre}</b><p>"${e.texto}"</p></div>`;
+            });
+        }
+    });
+
+    // --- EFECTOS VISUALES ---
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let particles = [];
-    for(let i=0; i<150; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: Math.random() * 2,
-            d: Math.random() * 150
-        });
-    }
-
-    function draw() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let stars = [];
+    for(let i=0; i<150; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2 });
+    
+    function animate() {
         ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(212, 175, 55, 0.5)";
-        ctx.beginPath();
-        for(let i=0; i<150; i++) {
-            let p = particles[i];
-            ctx.moveTo(p.x, p.y);
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
-        }
-        ctx.fill();
-        update();
+        ctx.fillStyle = "rgba(212,175,55,0.6)";
+        stars.forEach(s => {
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill();
+            s.y += 0.2; if(s.y > canvas.height) s.y = 0;
+        });
+        requestAnimationFrame(animate);
     }
+    animate();
 
-    function update() {
-        for(let i=0; i<150; i++) {
-            let p = particles[i];
-            p.y += Math.cos(p.d) + 1 + p.r/2;
-            if(p.y > canvas.height) {
-                particles[i] = {x: Math.random()*canvas.width, y: -10, r: p.r, d: p.d};
-            }
-        }
-    }
-    setInterval(draw, 33);
-
-    // Rastro de Varita
     document.addEventListener('mousemove', (e) => {
         const flare = document.createElement('div');
         flare.className = 'cursor-flare';
-        flare.style.left = e.clientX + 'px';
-        flare.style.top = e.clientY + 'px';
+        flare.style.left = e.clientX + 'px'; flare.style.top = e.clientY + 'px';
         document.body.appendChild(flare);
-        setTimeout(() => flare.remove(), 500);
+        setTimeout(() => flare.remove(), 400);
     });
 </script>
 </body>
