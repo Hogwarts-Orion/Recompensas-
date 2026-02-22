@@ -3,199 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gringotts Wizarding Bank | Hogwarts Orión</title>
+    <title>2do Aniversario | Hogwarts Orión</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Special+Elite&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700&family=Special+Elite&display=swap');
 
         :root {
-            --gold: #d4af37; --gold-dark: #8b6d45; --bg: #050505;
-            --sly: #2e7d32; --gry: #c62828; --rav: #1565c0; --huf: #fbc02d;
+            --gold: #d4af37;
+            --gold-light: #f9e29c;
+            --deep-space: #050508;
         }
 
         body {
-            margin: 0; background: var(--bg); color: #e0e0e0;
-            font-family: 'Special Elite', serif; display: flex; flex-direction: column; align-items: center; padding: 10px;
-            background-image: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+            margin: 0;
+            padding: 0;
+            background: var(--deep-space);
+            color: white;
+            font-family: 'Cinzel', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1a1a2e 0%, #050508 100%),
+                url('https://www.transparenttextures.com/patterns/stardust.png');
         }
 
-        .main-app { width: 100%; max-width: 500px; background: rgba(18, 18, 20, 0.95); border: 1px solid var(--gold); border-radius: 15px; padding: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
-        
-        h1 { font-family: 'Cinzel'; color: var(--gold); text-align: center; margin: 10px 0; letter-spacing: 4px; font-weight: 900; }
-        .subtitle { text-align: center; font-size: 9px; color: var(--gold-dark); margin-bottom: 20px; letter-spacing: 2px; }
+        .celebration-card {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
 
-        .vault-card { background: linear-gradient(135deg, #000 0%, #1a1a1c 100%); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; text-align: center; position: relative; }
-        .user-name { font-size: 18px; color: #fff; font-family: 'Cinzel'; margin-bottom: 5px; }
-        .balance-box { font-size: 32px; color: var(--gold); font-weight: bold; }
+        .constellation {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px var(--gold));
+        }
 
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
-        .tab-btn { background: #111; border: 1px solid #444; color: #777; padding: 10px 2px; font-family: 'Cinzel'; font-size: 9px; cursor: pointer; border-radius: 4px; }
-        .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--gold);
+            font-size: 2.5em;
+            margin: 20px 0 10px;
+            text-shadow: 0 0 15px rgba(214, 175, 55, 0.5);
+        }
 
-        .list-area { max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .item-card { background: rgba(255,255,255,0.03); border: 1px solid #222; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .item-info b { display: block; color: var(--gold); font-size: 12px; font-family: 'Cinzel'; }
-        .item-info span { font-size: 9px; color: #999; }
-        .qty-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .tagline {
+            font-size: 1.2em;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+        }
 
-        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: var(--gold); border-radius: 8px; margin-bottom: 12px; text-align: center; font-family: 'Cinzel'; }
-        .btn-gold { background: var(--gold); color: #000; border: none; padding: 12px; width: 100%; font-family: 'Cinzel'; font-weight: bold; cursor: pointer; border-radius: 6px; }
-        .hidden { display: none; }
+        /* DISEÑO DEL CRONÓMETRO */
+        .countdown-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .time-box {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 15px 5px;
+            transition: transform 0.3s;
+        }
+
+        .time-box:hover {
+            transform: translateY(-5px);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .number {
+            display: block;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: white;
+            font-family: 'Cinzel', serif;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.7em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .anniversary-date {
+            margin-top: 30px;
+            font-family: 'Special Elite', cursive;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .footer-logo {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: var(--gold-dark);
+            opacity: 0.6;
+        }
+
+        /* EFECTO DE DESTELLOS */
+        .sparkle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="main-app">
-        <h1>GRINGOTTS</h1>
-        <div class="subtitle">Banco de Magos - Hogwarts Orión</div>
+    <div class="celebration-card">
+        <div class="constellation">✨✨✨</div>
+        
+        <p class="anniversary-date">FUNDADO EL 15 DE AGOSTO DE 2024</p>
+        <h1>2 AÑOS DE MAGIA</h1>
+        <p class="tagline">HOGWARTS ORIÓN</p>
 
-        <div id="login-zone">
-            <input type="text" id="user-search" placeholder="Nombre de Mago/Bruja">
-            <button class="btn-gold" onclick="login()">ABRIR MI BÓVEDA</button>
-            <p style="font-size: 9px; color: #444; text-align: center; margin-top: 10px;">Ingresa tu nombre de WhatsApp (sin emojis si es posible).</p>
+        <div class="countdown-container">
+            <div class="time-box">
+                <span class="number" id="days">00</span>
+                <span class="label">Días</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="hours">00</span>
+                <span class="label">Horas</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Min</span>
+            </div>
+            <div class="time-box">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Seg</span>
+            </div>
         </div>
 
-        <div id="app-zone" class="hidden">
-            <div class="vault-card">
-                <div id="user-house" style="font-size: 10px; color: var(--gold-dark); margin-bottom: 5px;">CASA MAGICA</div>
-                <div class="user-name" id="user-display">MAGO</div>
-                <div class="balance-box"><span id="user-gold">0</span> G</div>
-            </div>
+        <p style="color: var(--gold-light); font-size: 0.9em; line-height: 1.6; margin: 0 20px;">
+            "Caminamos bajo las mismas estrellas, forjando una leyenda que el tiempo no podrá borrar."
+        </p>
 
-            <div class="nav-grid">
-                <button class="tab-btn active" onclick="showTab('baul')">BAÚL</button>
-                <button class="tab-btn" onclick="showTab('tienda')">TIENDA</button>
-                <button class="tab-btn" onclick="showTab('rank')">RANKING</button>
-                <button class="tab-btn" onclick="showTab('spells')">HECHIZOS</button>
-            </div>
-
-            <div id="tab-baul" class="tab-content">
-                <div class="list-area" id="baul-list"></div>
-            </div>
-
-            <div id="tab-tienda" class="tab-content hidden">
-                <div class="list-area" id="store-list"></div>
-            </div>
-
-            <div id="tab-rank" class="tab-content hidden">
-                <div class="list-area" id="rank-list"></div>
-            </div>
-
-            <div id="tab-spells" class="tab-content hidden">
-                <div class="list-area" style="font-size: 11px;" id="spell-list"></div>
-            </div>
-
-            <p onclick="location.reload()" style="text-align:center; font-size:10px; color:#444; cursor:pointer; margin-top:15px">Cerrar Sesión</p>
-        </div>
+        <div class="footer-logo">✧ GRINGOTTS WIZARDING BANK ✧</div>
     </div>
 
-<script>
-    // --- DATOS COMPLETOS INYECTADOS ---
-    const GALEONES = {
-        "VALEN M": 1850248, "MONTSE CALDERON": 28400, "ARMY": 30900, "CHINNI": 3000, "FRAN OLIVARES": 2503532,
-        "ESTELA MALFOY": 1931900, "BREN": 105500, "LULU": 552290, "YOPI DE ARANDANO": 1800, "MARTINA": 5642800,
-        "LUISURREA": 12443039, "VICTOR SMIRNOV": 418570, "ALII": 121543237, "BETSI": 82831328, "VAL": 120200,
-        "CAM": 459450, "SHADOW THE HEDGEHOG": 448350, "VANIA": 1221782, "JAVI": 359240, "BELU": 30373514,
-        "AUDE": 132990, "LISETTE": 5002980, "POLLITO PIO": 762160, "ANITAPAU": 729390, "LILY": 54432,
-        "LU": 12424425, "JUAN J": 1245440, "FIOO FRANCO": 176160, "DANIEL": 714300, "GRETEL": 1424660,
-        "ANTONIOMANUEL": 649090, "BUNNY": 15530222, "NANCY": 18239795, "AIX NAJLE": 9314350, "SOFIA": 8768712,
-        "NICK": 2218114, "NINA": 8403542, "WENDY": 6741978, "ASTERI NOX": 485220, "ANGE": 33253387,
-        "MILCHHHHH": 915006, "ANGELICA": 2712535, "KEIRON": 852100, "MAR": 3941970, "ELISEO CHAVEZ": 28060,
-        "MALENA NOTT": 444665, "GABO": 3681553, "LESLIE": 3958666, "URIEL": 1783698, "ANDRA": 8269726,
-        "DARI": 13576740, "MELINA SLY": 25504328, "JESSI": 3743284, "FERNANDO SLY": 5972030, "MILAGROS MALFOY": 666680
-    };
+    <script>
+        // Configurar la fecha objetivo: 15 de agosto de 2026
+        const targetDate = new Date("August 15, 2026 00:00:00").getTime();
 
-    const INV_MASTER = {
-        "FERNANDO SLY": {"🩵🍫":65,"🖤🍫":27,"💡":25,"💛🍫":17,"💀🪄":34,"💊":25,"💘🧪":19,"🔮":18,"🫘":51},
-        "BELU": {"🧡🍫":36,"💜🍫":21,"💚🍫":2,"🪄💀":6,"🔥🧹":1},
-        "CRIS DELACOUR": {"🩵🍫":96,"🪞":96,"🎱":93,"🧪💘":24,"🗝️🪽":20,"🍭":10},
-        "ALII": {"🩷🍫":91,"💀🪄":90,"🩵🍫":87,"💍":36,"💡":36,"🫘":52,"🗝️🪽":20},
-        "MELINA SLY": {"💚🍫":30,"❤️🍫":28,"💛🍫":32,"🩵🍫":55,"🫘":169,"💍":27},
-        "LUISURREA": {"🫘":168,"🪄💀":37,"🩷🍫":36,"🩵🍫":25,"💚🍫":31},
-        "NANCY": {"🪄💀":101,"🩵🍫":61,"🧡🍫":49,"🩷🍫":51,"🔮":42,"🫘":49,"🍭⚡":20},
-        "NICK": {"🧡🍫":22,"🩵🍫":27,"🖤🍫":23,"🔮":21,"💘🧪":13,"💍":16}
-    };
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
 
-    const STORE = [
-        {n:"Saeta de Fuego 🔥🧹", p:3800, d:"x2 Puntos Quidditch"},
-        {n:"Varita de Sauco 🪄💀", p:3800, d:"x2 Puntos Duelos"},
-        {n:"Giratiempo ⏱️", p:4400, d:"Entrega retos tarde"},
-        {n:"Felix Felicis 🧪🍀", p:4400, d:"Participación ausente"},
-        {n:"Amortentia 🧪💘", p:8800, d:"Enamora a un rival"},
-        {n:"Caja de Grageas 🫙🫘", p:50000, d:"12 grageas sorpresa"},
-        {n:"Ranita Celeste 🩵🍫", p:450, d:"x2 G en Minijuegos"}
-    ];
+            // Cálculos de tiempo
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-    const SPELLS = {
-        "Ataque": ["Expelliarmus", "Incendio", "Depulso", "Furnunculus", "Desmaius", "Penetro"],
-        "Stealth": ["Rictusempra", "Flipendo", "Immobulus", "Diffindo", "Impedimenta"],
-        "Defensa": ["Petrificus Totalus", "Bombarda", "Incarcerous", "Confundus", "Meteolojinx"],
-        "Maldiciones": ["Avada Kedavra", "Crucio", "Imperio", "Confringo", "Sectumsempra"]
-    };
+            // Inyectar en el HTML
+            document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
 
-    let sesion = null;
-
-    function login() {
-        const raw = document.getElementById('user-search').value.toUpperCase();
-        const clean = raw.replace(/[^A-Z0-9 ]/g, "").trim();
-        
-        const oro = GALEONES[clean] || 0;
-        const inv = INV_MASTER[clean] || {};
-
-        sesion = { nombre: clean, oro: oro, inventario: inv };
-        document.getElementById('login-zone').classList.add('hidden');
-        document.getElementById('app-zone').classList.remove('hidden');
-        
-        document.getElementById('user-display').innerText = clean || "MAGO DESCONOCIDO";
-        document.getElementById('user-gold').innerText = oro.toLocaleString();
-        
-        renderBaul();
-        renderTienda();
-        renderRank();
-        renderSpells();
-    }
-
-    function renderBaul() {
-        const cont = document.getElementById('baul-list');
-        const items = Object.entries(sesion.inventario);
-        cont.innerHTML = items.length ? items.map(([e, q]) => `
-            <div class="item-card">
-                <div class="item-info"><b>${e} Objeto Mágico</b><span>En posesión</span></div>
-                <div class="qty-badge">${q}</div>
-            </div>
-        `).join('') : "<p style='text-align:center;font-size:10px'>Bóveda vacía de objetos.</p>";
-    }
-
-    function renderTienda() {
-        document.getElementById('store-list').innerHTML = STORE.map(i => `
-            <div class="item-card">
-                <div class="item-info"><b>${i.n}</b><span>${i.d}</span></div>
-                <button class="btn-gold" style="width:70px; font-size:9px" onclick="alert('Bóveda bloqueada por el duende')">${i.p}G</button>
-            </div>
-        `).join('');
-    }
-
-    function renderRank() {
-        const top = Object.entries(GALEONES).sort((a,b) => b[1] - a[1]).slice(0,15);
-        document.getElementById('rank-list').innerHTML = top.map((u, i) => `
-            <div class="item-card"><span><b>${i+1}.</b> ${u[0]}</span><span style="color:var(--gold)">${u[1].toLocaleString()}G</span></div>
-        `).join('');
-    }
-
-    function renderSpells() {
-        let h = "";
-        for(let cat in SPELLS) {
-            h += `<div style="color:var(--gold); margin:10px 0; border-bottom:1px solid #333;">${cat}</div>`;
-            h += `<div style="display:flex; flex-wrap:wrap; gap:5px;">${SPELLS[cat].map(s => `<span style="background:#111; padding:3px 8px; border-radius:4px; border:1px solid #222;">${s}</span>`).join('')}</div>`;
+            // Si el tiempo termina
+            if (distance < 0) {
+                clearInterval(interval);
+                document.querySelector(".countdown-container").innerHTML = "<h1>¡FELIZ ANIVERSARIO!</h1>";
+            }
         }
-        document.getElementById('spell-list').innerHTML = h;
-    }
 
-    function showTab(t) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-'+t).classList.remove('hidden');
-        event.currentTarget.classList.add('active');
-    }
-</script>
+        // Crear estrellas de fondo dinámicamente
+        for (let i = 0; i < 50; i++) {
+            let sparkle = document.createElement("div");
+            sparkle.className = "sparkle";
+            sparkle.style.top = Math.random() * 100 + "%";
+            sparkle.style.left = Math.random() * 100 + "%";
+            sparkle.style.animationDelay = Math.random() * 2 + "s";
+            document.body.appendChild(sparkle);
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
 </body>
 </html>
