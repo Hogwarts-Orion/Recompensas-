@@ -3,347 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hogwarts Orión | 2 Años de Magia</title>
+    <title>Crónicas de Orión | 2do Aniversario</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700&family=Quicksand:wght@300;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700&family=Dancing+Script:wght@600&display=swap');
 
         :root {
             --gold: #d4af37;
-            --gold-bright: #fff5d7;
-            --magic-blue: #0a0a1a;
-            --slytherin: #2e7d32;
-            --gryffindor: #c62828;
-            --ravenclaw: #1565c0;
-            --hufflepuff: #fbc02d;
+            --gold-light: #f9e29c;
+            --bg-dark: #020205;
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            background: var(--magic-blue);
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg-dark);
             color: white;
             font-family: 'Cinzel', serif;
             overflow-x: hidden;
-            cursor: url('https://cur.cursors-4u.net/games/gam-4/gam384.cur'), auto;
+            background-image: radial-gradient(circle at center, #0a0a1f 0%, #020205 100%);
         }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; }
+        /* FONDO DE ESTRELLAS ANIMADO */
+        #star-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
-        .universe {
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* HEADER DIRECCIÓN */
+        .directorate-header {
+            border-bottom: 2px double var(--gold);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
             position: relative;
-            z-index: 1;
+        }
+
+        .directorate-header h2 {
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            color: var(--gold-light);
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .main-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            margin: 15px 0;
+        }
+
+        /* TEMPORIZADOR MÍSTICO */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .time-box {
+            position: relative;
+            width: 100px;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .time-box label {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        /* SECCIÓN FIREBASE: EL LIBRO DE LOS DESEOS */
+        .magic-book {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .magic-book h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--gold-light);
+            margin-top: 0;
+        }
+
+        .form-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            background: radial-gradient(circle at center, rgba(20, 20, 50, 0.4) 0%, transparent 70%);
-        }
-
-        /* HEADER */
-        .header { text-align: center; margin-bottom: 50px; }
-        .header h1 { 
-            font-family: 'Cinzel Decorative', cursive; 
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-            margin: 0;
-            animation: float 3s ease-in-out infinite;
-        }
-        .anniversary-badge {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--gold);
-            padding: 5px 20px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            color: var(--gold-bright);
-        }
-
-        /* COUNTDOWN */
-        .timer-grid {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .time-unit {
-            text-align: center;
-            min-width: 80px;
-        }
-        .time-unit span {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 10px var(--gold);
-        }
-        .time-unit small { color: var(--gold); font-size: 0.7rem; text-transform: uppercase; }
-
-        /* INTERACCIÓN: EL MURO DE LOS DESEOS */
-        .wish-section {
-            width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-
-        .wish-input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto 30px;
         }
 
         input, textarea {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             border: 1px solid var(--gold);
-            color: white;
             padding: 12px;
-            border-radius: 8px;
-            font-family: 'Quicksand', sans-serif;
+            color: white;
+            font-family: 'Cinzel', serif;
+            border-radius: 5px;
+            outline: none;
         }
 
-        .btn-magic {
-            background: linear-gradient(45deg, var(--gold-dark), var(--gold));
+        .btn-cast {
+            background: var(--gold);
             color: black;
             border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-family: 'Cinzel', serif;
+            padding: 15px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 0 15px var(--gold);
-        }
-        .btn-magic:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--gold); }
-
-        /* CONSTELACIÓN DE RECUERDOS */
-        #wish-orb-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        .wish-orb {
-            width: 60px; height: 60px;
-            background: radial-gradient(circle, var(--gold-bright), var(--gold));
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--gold);
-            animation: pulse 2s infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            color: black;
-            font-weight: bold;
-            overflow: hidden;
-            text-align: center;
-            padding: 5px;
+            letter-spacing: 2px;
+            border-radius: 5px;
         }
 
-        /* ORÁCULO DE LAS CASAS */
-        .house-selector {
+        .btn-cast:hover {
+            background: white;
+            box-shadow: 0 0 20px white;
+            transform: scale(1.02);
+        }
+
+        /* LISTADO DE DESEOS */
+        #wishes-display {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            width: 100%;
-            max-width: 600px;
-            margin-top: 50px;
-        }
-        .house-shield {
-            cursor: pointer;
-            transition: 0.5s;
-            filter: grayscale(0.5);
-            text-align: center;
-        }
-        .house-shield:hover { filter: grayscale(0) scale(1.2) drop-shadow(0 0 15px gold); }
-        .house-shield img { width: 80px; }
-
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 10px var(--gold); } 50% { box-shadow: 0 0 25px var(--gold); } 100% { box-shadow: 0 0 10px var(--gold); } }
-
-        #oracle-message {
-            margin-top: 20px;
-            height: 50px;
-            color: var(--gold-light);
-            font-style: italic;
-            font-family: 'Quicksand', sans-serif;
+            margin-top: 40px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
         }
 
+        .wish-card {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--gold);
+            padding: 15px;
+            text-align: left;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .wish-card b { color: var(--gold-light); display: block; margin-bottom: 5px; font-size: 0.8rem; }
+        .wish-card p { margin: 0; font-family: 'Dancing Script', cursive; font-size: 1.2rem; color: #ddd; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer {
+            margin-top: 80px;
+            padding: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            color: #555;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="stars"></canvas>
+    <canvas id="star-canvas"></canvas>
 
-    <div class="universe">
-        <div class="header">
-            <div class="anniversary-badge">ANIVERSARIO 15 DE AGOSTO</div>
-            <h1>Hogwarts Orión</h1>
-            <p style="letter-spacing: 5px; color: #888;">DOS AÑOS DE LUZ CONSTANTE</p>
+    <div class="container">
+        <header class="directorate-header">
+            <h2>Dirección de Hogwarts Orión</h2>
+            <h1 class="main-title">Crónicas del Biánio</h1>
+            <p style="color: var(--gold); letter-spacing: 4px;">15.08.2024 — 15.08.2026</p>
+        </header>
+
+        <div class="timer-container">
+            <div class="time-box"><span id="d">00</span><label>Días</label></div>
+            <div class="time-box"><span id="h">00</span><label>Horas</label></div>
+            <div class="time-box"><span id="m">00</span><label>Minutos</label></div>
+            <div class="time-box"><span id="s">00</span><label>Segundos</label></div>
         </div>
 
-        <div class="timer-grid">
-            <div class="time-unit"><span id="days">00</span><small>Días</small></div>
-            <div class="time-unit"><span id="hours">00</span><small>Horas</small></div>
-            <div class="time-unit"><span id="mins">00</span><small>Min</small></div>
-            <div class="time-unit"><span id="secs">00</span><small>Seg</small></div>
-        </div>
-
-        <div class="wish-section">
-            <h3>✨ Constelación de Deseos ✨</h3>
-            <p style="font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">Escribe tu deseo para el futuro de Orión y lánzalo a las estrellas.</p>
-            <div class="wish-input-group">
-                <input type="text" id="wish-name" placeholder="Tu nombre/Apodo">
-                <input type="text" id="wish-text" placeholder="Escribe tu deseo aquí...">
-                <button class="btn-magic" onclick="sendWish()">LANZAR HECHIZO</button>
+        <section class="magic-book">
+            <h3>Libro de Deseos Eternos</h3>
+            <p style="font-size: 0.8rem; margin-bottom: 30px;">Vuestra voz quedará grabada en los astros de Orión por siempre.</p>
+            
+            <div class="form-group">
+                <input type="text" id="mago-nombre" placeholder="Nombre del Mago/Bruja">
+                <textarea id="mago-deseo" rows="3" placeholder="Tu deseo para Orión..."></textarea>
+                <button class="btn-cast" onclick="lanzarHechizo()">GRABAR EN EL DESTINO</button>
             </div>
-            <div id="wish-orb-container">
+
+            <div id="wishes-display">
                 </div>
-        </div>
+        </section>
 
-        <div class="house-selector">
-            <div class="house-shield" onclick="revealOracle('Slytherin')">
-                <div style="color: var(--sly)">🐍</div>
-                <small>SLYTHERIN</small>
-            </div>
-            <div class="house-shield" onclick="revealOracle('Gryffindor')">
-                <div style="color: var(--gry)">🦁</div>
-                <small>GRYFFINDOR</small>
-            </div>
-            <div class="house-shield" onclick="revealOracle('Ravenclaw')">
-                <div style="color: var(--rav)">🦅</div>
-                <small>RAVENCLAW</small>
-            </div>
-            <div class="house-shield" onclick="revealOracle('Hufflepuff')">
-                <div style="color: var(--huf)">🦡</div>
-                <small>HUFFLEPUFF</small>
-            </div>
-        </div>
-        <div id="oracle-message">Toca tu casa para recibir una profecía...</div>
-
-        <footer style="margin-top: 100px; font-size: 0.7rem; color: #444; text-align: center;">
-            <p>SISTEMA MÁGICO PROPIEDAD DE GRINGOTTS & LA ORDEN DE ORIÓN</p>
-            <p>2024 - 2026</p>
+        <footer>
+            PROPIEDAD DE LA DIRECCIÓN GENERAL DE HOGWARTS ORIÓN<br>
+            "Nihil Est Quod Astris Non Possit"
         </footer>
     </div>
 
 <script>
-    // --- LÓGICA DEL CONTADOR ---
-    const targetDate = new Date("August 15, 2026 00:00:00").getTime();
-    function updateTimer() {
+    // --- CONFIGURACIÓN FIREBASE ---
+    const firebaseConfig = {
+        databaseURL: "https://aniversario-20dcc-default-rtdb.firebaseio.com/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // --- FUNCIONAMIENTO DEL LIBRO (FIREBASE) ---
+    function lanzarHechizo() {
+        const nombre = document.getElementById('mago-nombre').value;
+        const deseo = document.getElementById('mago-deseo').value;
+
+        if(!nombre || !deseo) return alert("Dirección informa: El pergamino está incompleto.");
+
+        const ref = database.ref('deseos');
+        ref.push({
+            nombre: nombre,
+            deseo: deseo,
+            timestamp: Date.now()
+        });
+
+        document.getElementById('mago-nombre').value = "";
+        document.getElementById('mago-deseo').value = "";
+    }
+
+    // Escuchar cambios en tiempo real
+    database.ref('deseos').on('value', (snapshot) => {
+        const display = document.getElementById('wishes-display');
+        display.innerHTML = "";
+        const data = snapshot.val();
+        if(data) {
+            Object.values(data).reverse().forEach(item => {
+                const card = `
+                    <div class="wish-card">
+                        <b>${item.nombre.toUpperCase()}</b>
+                        <p>"${item.deseo}"</p>
+                    </div>
+                `;
+                display.innerHTML += card;
+            });
+        }
+    });
+
+    // --- CONTADOR REAL ---
+    const target = new Date("August 15, 2026 00:00:00").getTime();
+    setInterval(() => {
         const now = new Date().getTime();
-        const diff = targetDate - now;
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('days').innerText = d;
-        document.getElementById('hours').innerText = h;
-        document.getElementById('mins').innerText = m;
-        document.getElementById('secs').innerText = s;
-    }
-    setInterval(updateTimer, 1000);
+        const diff = target - now;
+        document.getElementById('d').innerText = Math.floor(diff / (86400000));
+        document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000);
+        document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('s').innerText = Math.floor((diff % 60000) / 1000);
+    }, 1000);
 
-    // --- LÓGICA DE INTERACCIÓN: DESEOS ---
-    function sendWish() {
-        const name = document.getElementById('wish-name').value;
-        const text = document.getElementById('wish-text').value;
-        if(!name || !text) return alert("Debes poner tu nombre y un deseo mágico.");
-
-        const container = document.getElementById('wish-orb-container');
-        const orb = document.createElement('div');
-        orb.className = 'wish-orb';
-        orb.innerText = name.substring(0, 10);
-        orb.title = text;
-        orb.onclick = () => alert(`${name} desea: "${text}"`);
-        
-        container.appendChild(orb);
-        
-        // Limpiar
-        document.getElementById('wish-name').value = "";
-        document.getElementById('wish-text').value = "";
-        
-        // Sonido o efecto visual de éxito
-        confettiEffect();
-    }
-
-    // --- LÓGICA DEL ORÁCULO ---
-    const prophecies = [
-        "Tus Galeones se duplicarán bajo la luz de la luna.",
-        "Un nuevo aliado de otra casa te salvará en un duelo.",
-        "La próxima clase de Pociones revelará un secreto oculto.",
-        "El mapa de Orión te mostrará un camino que nadie ha visto.",
-        "Tu lealtad será recompensada antes del 15 de agosto.",
-        "Una estrella fugaz traerá un objeto perdido a tu baúl."
-    ];
-
-    function revealOracle(house) {
-        const msg = document.getElementById('oracle-message');
-        const randomProphecy = prophecies[Math.floor(Math.random() * prophecies.length)];
-        msg.innerHTML = `<strong>${house}:</strong> "${randomProphecy}"`;
-        msg.style.color = "var(--gold-light)";
-    }
-
-    // --- EFECTO DE FONDO: ESTRELLAS ---
-    const canvas = document.getElementById('stars');
+    // --- FONDO DE ESTRELLAS ---
+    const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    
-    function initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let stars = [];
+
+    for(let i=0; i<200; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 1.5,
+            opacity: Math.random()
+        });
     }
 
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2;
-            this.speedX = Math.random() * 0.5 - 0.25;
-            this.speedY = Math.random() * 0.5 - 0.25;
-            this.color = `rgba(212, 175, 55, ${Math.random()})`;
-        }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.y > canvas.height) this.y = 0;
-        }
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    function createParticles() {
-        for (let i = 0; i < 150; i++) particles.push(new Particle());
-    }
-
-    function animate() {
+    function drawStars() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(animate);
+        stars.forEach(s => {
+            ctx.fillStyle = `rgba(212, 175, 55, ${s.opacity})`;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+            ctx.fill();
+            s.opacity += (Math.random() - 0.5) * 0.05;
+            if(s.opacity < 0) s.opacity = 0;
+            if(s.opacity > 1) s.opacity = 1;
+        });
+        requestAnimationFrame(drawStars);
     }
-
-    window.addEventListener('resize', initCanvas);
-    initCanvas();
-    createParticles();
-    animate();
-
-    function confettiEffect() {
-        // Un pequeño destello visual cuando lanzan un deseo
-        document.body.style.backgroundColor = "#1a1a3a";
-        setTimeout(() => { document.body.style.backgroundColor = "var(--magic-blue)"; }, 100);
-    }
+    drawStars();
 </script>
 </body>
 </html>
